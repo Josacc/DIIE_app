@@ -14,7 +14,7 @@ library(shinythemes)
 
 
 source("contact/contact.R")
-source("modules/actualizacion.R")
+# source("modules/actualizacion.R")
 
 secure_app(
   theme    = shinytheme("flatly"),
