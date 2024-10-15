@@ -8,6 +8,7 @@ library(shinydashboard)
 library(shinyauthr)
 library(shinymanager)
 
+# source("modules/actualizacion.R")
 
 function(input, output, session) {
 
@@ -346,17 +347,38 @@ function(input, output, session) {
 
 # Actualización ----------------------------------------------
 
-  output$database_original <- renderDataTable({
-    datatable((data()[[1]])[, input$id_columns_data, drop = FALSE],
-              rownames   = FALSE,
-              filter     = "top",
-              options    = list(
-                pageLength  = 5,
-                language    = list(
-                  url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                )
-              )
-    )
+    # actualizacion_Server("id_actualizacion")
+  output$database_original <- renderDT({
+    data()[[1]] %>%
+      datatable(
+        rownames   = FALSE,
+        filter     = "top",
+        extensions = c(
+          "SearchBuilder", "DateTime", "Buttons", "FixedHeader"
+        ),
+        options    = list(
+          ordering      = F,
+          pageLength    = 5,
+          fixedHeader   = TRUE,
+          dom           = "QBlftip",
+          buttons       = list(
+            list(
+              extend           = "colvis",
+              text             = "Visibilidad de columnas",
+              columns          = 0:9,
+              collectionLayout = "fixed columns",
+              popoverTitle     = "Control de visibilidad de columnas"
+            )
+          ),
+          searchbuilder = TRUE,
+          language      = list(
+            url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
+          ),
+          columnDefs  = list(
+            list(visible = FALSE, targets = c(7, 8, 9))
+          )
+        )
+      )
   })
 
 
@@ -1097,6 +1119,7 @@ function(input, output, session) {
         p(strong("NR: "), "cuestionario no revisado"),
         br(),
         DTOutput("table_q_aclaracion_oc"),
+        h5(strong(textOutput("id_celdas_seleccionadas"))),
         br(),
         br(),
         br(),
@@ -1190,6 +1213,14 @@ function(input, output, session) {
     req(credentials()$user_auth)
     db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$datatable
   }, server = FALSE)
+
+  output$id_celdas_seleccionadas <- renderText({
+    paste0(
+      "Cantidad de celdas seleccionadas: ",
+      nrow(input$table_q_aclaracion_oc_cells_selected)
+    )
+
+  })
 
   output$data_q_aclaracion_oc = renderDT({
     req(credentials()$user_auth)

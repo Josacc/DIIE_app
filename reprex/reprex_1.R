@@ -1,4 +1,4 @@
-a <- data_and_update("historial_seguimiento/xIktan_20240911092237512_reporteSegumiento.xlsx")[[1]]
+a <- data_and_update("historial_seguimiento/xIktan_20241014110901894_reporteSegumiento.xlsx")[[1]]
 
 db_q_aclaracion_oc <- function(database, delete_q) {
 
@@ -120,15 +120,21 @@ shinyApp(
     "
       ))),
       DTOutput('tbl_1'),
+      h5(strong(textOutput("texto"))),
       br(),
       br(),
-      verbatimTextOutput("text_out"),
+      br(),
       DTOutput('tbl_2')
     )
   ),
   server <-  function(input, output) {
 
-    output$text_out <- renderPrint(input$tbl_1_cells_selected)
+
+
+    output$texto <- renderText({
+      paste0("Cantidad de celdas seleccionadas: ", nrow(input$tbl_1_cells_selected))
+
+    })
 
     output$tbl_1 = renderDT(
       db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable,

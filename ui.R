@@ -14,6 +14,7 @@ library(shinythemes)
 
 
 source("contact/contact.R")
+source("modules/actualizacion.R")
 
 secure_app(
   theme    = shinytheme("flatly"),
@@ -616,27 +617,16 @@ dashboardPage(
 
 # Actualización -----------------------------------------------------------
 
+          # actualizacion_UI("id_actualizacion"),
           tabPanel(
             title = strong(uiOutput("update"), style = "color: #3c8dbc;font-size: 12px;"),
             h4(strong("Historial de seguimiento")),
             br(),
-            dropdownButton(
-              checkboxGroupInput(
-                "id_columns_data",
-                "Columnas:",
-                choices  = c("Folio", "Entidad", "Usuario", "Perfil", "Registro", "Estatus", "Observación",
-                            "Contador de días", "Cantidad de obs", "Censo"),
-                selected = c("Folio", "Entidad", "Usuario", "Perfil", "Registro", "Estatus", "Observación",
-                             "Contador de días")
-              ),
-              circle  = TRUE,
-              status  = "primary",
-              icon    = icon("gear"),
-              width   = "300px",
-              tooltip = tooltipOptions(title = "Clic para seleccionar columnas")
-            ),
+            DTOutput("database_original"),
             br(),
-            dataTableOutput("database_original")
+            br(),
+            br(),
+            br()
           )
         )
       )

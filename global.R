@@ -22,7 +22,7 @@ Sys.setlocale(locale = "es_MX.utf8")
 
 # USER BASES ---------------------------------------------------------------
 
-source("data/application_user_base.R")
+source("user_base/application_user_base.R")
 
 set_labels(
   language              = "es",
@@ -32,7 +32,7 @@ set_labels(
   "Login"               = "Ingresar"
 )
 
-source("data/DIIE_user_base.R")
+source("user_base/DIIE_user_base.R")
 
 
 # IMPORT AND TIDY ----------------------------------------------------
