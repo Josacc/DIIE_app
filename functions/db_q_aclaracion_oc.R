@@ -1,4 +1,4 @@
-# "Aclaración de información OC" questionnaires database
+# "Aclaración de información OC" questionnaires database function
 db_q_aclaracion_oc <- function(database, delete_q) {
 
   .data <- database %>%
@@ -44,7 +44,7 @@ db_q_aclaracion_oc <- function(database, delete_q) {
         "FixedColumns", "SearchBuilder", "Buttons", "FixedHeader"
       ),
       options    = list(
-        ordering      = F,
+        ordering      = FALSE,
         pageLength    = 8,
         fixedHeader   = TRUE,
         dom           = "QBlftip",
