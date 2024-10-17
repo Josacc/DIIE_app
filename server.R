@@ -1119,8 +1119,16 @@ function(input, output, session) {
         p(strong("NR: "), "cuestionario no revisado"),
         br(),
         DTOutput("table_q_aclaracion_oc"),
-        h5(strong(textOutput("id_celdas_seleccionadas"))),
         br(),
+        strong(textOutput("id_celdas_seleccionadas"), style = "color: #ff5964"),
+        actionBttn(
+          "id_bttn_filter_obs",
+          label = " Filtrar",
+          style = "fill",
+          size  = "sm",
+          color = "danger",
+          icon  = icon("filter")
+        ),
         br(),
         br(),
         br(),
@@ -1214,9 +1222,13 @@ function(input, output, session) {
     db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$datatable
   }, server = FALSE)
 
+  bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
+    input$table_q_aclaracion_oc_cells_selected
+  })
+
   output$id_celdas_seleccionadas <- renderText({
     paste0(
-      "Cantidad de celdas seleccionadas: ",
+      "Celdas seleccionadas: ",
       nrow(input$table_q_aclaracion_oc_cells_selected)
     )
 
@@ -1228,7 +1240,7 @@ function(input, output, session) {
     db_q_aclaracion_oc_filter(
       db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$data,
       db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$table,
-      input$table_q_aclaracion_oc_cells_selected
+      bttn_filter_obs()
     ) %>%
       datatable(
         rownames   = FALSE,

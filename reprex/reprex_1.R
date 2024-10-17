@@ -120,8 +120,16 @@ shinyApp(
     "
       ))),
       DTOutput('tbl_1'),
-      h5(strong(textOutput("texto"))),
+      strong(textOutput("texto"), style = "color: #ff5964"),
       br(),
+      actionBttn(
+        "id_bttn_filter_obs",
+        label = " Filtrar",
+        style = "fill",
+        size  = "sm",
+        color = "danger",
+        icon  = icon("filter")
+      ),
       br(),
       br(),
       DTOutput('tbl_2')
@@ -129,14 +137,17 @@ shinyApp(
   ),
   server <-  function(input, output) {
 
+    bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
+      input$tbl_1_cells_selected
+    })
 
 
     output$texto <- renderText({
-      paste0("Cantidad de celdas seleccionadas: ", nrow(input$tbl_1_cells_selected))
+      paste0("Celdas seleccionadas: ", nrow(input$tbl_1_cells_selected))
 
     })
 
-    output$tbl_1 = renderDT(
+    output$tbl_1 <- renderDT(
       db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable,
       server = FALSE
     )
@@ -146,7 +157,7 @@ shinyApp(
       db_q_aclaracion_oc_filter(
         db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$data,
         db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$table,
-        input$tbl_1_cells_selected
+        bttn_filter_obs()#input$tbl_1_cells_selected
       ) %>%
         datatable(
           rownames   = FALSE,
