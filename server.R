@@ -1089,14 +1089,23 @@ function(input, output, session) {
         br(),
         DTOutput("table_q_aclaracion_oc"),
         br(),
-        strong(textOutput("id_celdas_seleccionadas"), style = "color: #ff5964"),
-        actionBttn(
-          "id_bttn_filter_obs",
-          label = " Filtrar",
-          style = "fill",
-          size  = "sm",
-          color = "danger",
-          icon  = icon("filter")
+        strong(textOutput("id_celdas_seleccionadas")),
+        fluidRow(
+          column(
+            width = 12,
+            actionButton(
+              "id_bttn_clear_selection",
+              label = "Limpiar selección",
+              icon  = icon("broom"),
+              class = "btn_custom_interno_1"
+            ),
+            actionButton(
+              "id_bttn_filter_obs",
+              label = "Filtrar",
+              icon  = icon("filter"),
+              class = "btn_custom_interno_2"
+            )
+          )
         ),
         br(),
         br(),
@@ -1193,6 +1202,11 @@ function(input, output, session) {
 
   bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
     input$table_q_aclaracion_oc_cells_selected
+  })
+
+  observeEvent(input$id_bttn_clear_selection, {
+    proxy <- dataTableProxy("table_q_aclaracion_oc")
+    selectCells(proxy, NULL)
   })
 
   output$id_celdas_seleccionadas <- renderText({

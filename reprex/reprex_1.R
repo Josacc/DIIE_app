@@ -101,85 +101,196 @@ db_q_aclaracion_oc <- function(database, delete_q) {
 
 }
 
-
-# db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable
-
 shinyApp(
-  ui =  dashboardPage(
-    dashboardHeader(
-      titleWidth = 60
-    ),
-    dashboardSidebar(
-      width = 60
-    ),
+  ui = dashboardPage(
+    dashboardHeader(titleWidth = 60),
+    dashboardSidebar(width = 0),
     dashboardBody(
-      tags$head(tags$style(HTML("
-      .content-wrapper {
-        background-color: #FFFFFF;
-      }
-    "
+      tags$head(tags$style(HTML(
+        "
+        .content-wrapper {
+          background-color: #FFFFFF;
+        }
+        "
       ))),
       DTOutput('tbl_1'),
       strong(textOutput("texto"), style = "color: #ff5964"),
       br(),
       actionBttn(
         "id_bttn_filter_obs",
-        label = " Filtrar",
+        label = "Filtrar",
         style = "fill",
-        size  = "sm",
+        size = "sm",
         color = "danger",
-        icon  = icon("filter")
+        icon = icon("filter")
+      ),
+      br(),
+      actionBttn(
+        "id_bttn_clear_selection",
+        label = "Limpiar selección",
+        style = "fill",
+        size = "sm",
+        color = "royal",
+        icon = icon("eraser")
       ),
       br(),
       br(),
       DTOutput('tbl_2')
     )
   ),
-  server <-  function(input, output) {
-
+  server = function(input, output, session) {
+    # Observa el evento del botón "Filtrar"
     bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
       input$tbl_1_cells_selected
     })
 
+    # Observa el evento del botón "Limpiar selección"
+    observeEvent(input$id_bttn_clear_selection, {
+      proxy <- dataTableProxy('tbl_1')
+      selectCells(proxy, NULL) # Limpia la selección de celdas
+    })
 
     output$texto <- renderText({
       paste0("Celdas seleccionadas: ", nrow(input$tbl_1_cells_selected))
-
     })
 
-    output$tbl_1 <- renderDT(
-      db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable,
-      server = FALSE
-    )
+    output$tbl_1 <- renderDT({
+      db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable
+    }, server = FALSE)
 
-    output$tbl_2 = renderDT({
-
+    output$tbl_2 <- renderDT({
       db_q_aclaracion_oc_filter(
         db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$data,
         db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$table,
-        bttn_filter_obs()#input$tbl_1_cells_selected
+        bttn_filter_obs()
       ) %>%
         datatable(
-          rownames   = FALSE,
-          selection  = list(target = "cell"),
+          rownames = FALSE,
+          selection = list(target = "cell"),
           extensions = c("Buttons", "FixedHeader"),
-          options    = list(
-            ordering    = FALSE,
-            pageLength  = 10,
+          options = list(
+            ordering = FALSE,
+            pageLength = 10,
             fixedHeader = TRUE,
-            dom         = "Blftip",
-            buttons     = list(
+            dom = "Blftip",
+            buttons = list(
               list(
-                extend           = "colvis",
-                columns          = c(1:5, 7:9),
+                extend = "colvis",
+                columns = c(1:5, 7:9),
                 collectionLayout = "fixed columns",
-                popoverTitle     = "Control de visibilidad de columnas"
+                popoverTitle = "Control de visibilidad de columnas"
               )
             ),
-            language    = list(
+            language = list(
               url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
             ),
-            columnDefs  = list(
+            columnDefs = list(
+              list(visible = FALSE, targets = c(1:3, 7:9))
+            )
+          )
+        )
+    })
+  }
+)
+
+library(shiny)
+library(shinydashboard)
+library(DT)
+library(shinyWidgets)
+library(stringr)
+
+shinyApp(
+  ui = dashboardPage(
+    dashboardHeader(titleWidth = 60),
+    dashboardSidebar(width = 0),
+    dashboardBody(
+      tags$head(tags$style(HTML(
+        "
+        .content-wrapper {
+          background-color: #FFFFFF;
+        }
+        .btn_custom_interno_1 {
+          background-color: #3c8dbc;
+          color: white;
+        }
+        .btn_custom_interno_2 {
+          background-color: navy;
+          color: white;
+        }
+        "
+      ))),
+      DTOutput('tbl_1'),
+      br(),
+      strong(textOutput("texto")),
+      fluidRow(
+        column(
+          width = 12,
+          actionButton(
+            "id_bttn_clear_selection",
+            label = "Limpiar selección",
+            icon  = icon("broom"),
+            class = "btn_custom_interno_1"
+          ),
+          actionButton(
+            "id_bttn_filter_obs",
+            label = "Filtrar",
+            icon  = icon("filter"),
+            class = "btn_custom_interno_2"
+          )
+        )
+      ),
+      br(),
+      br(),
+      DTOutput('tbl_2')
+    )
+  ),
+  server = function(input, output, session) {
+    # Observa el evento del botón "Filtrar"
+    bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
+      input$tbl_1_cells_selected
+    })
+
+    # Observa el evento del botón "Limpiar selección"
+    observeEvent(input$id_bttn_clear_selection, {
+      proxy <- dataTableProxy('tbl_1')
+      selectCells(proxy, NULL) # Limpia la selección de celdas
+    })
+
+    output$texto <- renderText({
+      paste0("Celdas seleccionadas: ", nrow(input$tbl_1_cells_selected))
+    })
+
+    output$tbl_1 <- renderDT({
+      db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$datatable
+    }, server = FALSE)
+
+    output$tbl_2 <- renderDT({
+      db_q_aclaracion_oc_filter(
+        db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$data,
+        db_q_aclaracion_oc(a, c("8101", "8201", "8301"))$table,
+        bttn_filter_obs()
+      ) %>%
+        datatable(
+          rownames = FALSE,
+          selection = list(target = "cell"),
+          extensions = c("Buttons", "FixedHeader"),
+          options = list(
+            ordering = FALSE,
+            pageLength = 10,
+            fixedHeader = TRUE,
+            dom = "Blftip",
+            buttons = list(
+              list(
+                extend = "colvis",
+                columns = c(1:5, 7:9),
+                collectionLayout = "fixed columns",
+                popoverTitle = "Control de visibilidad de columnas"
+              )
+            ),
+            language = list(
+              url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
+            ),
+            columnDefs = list(
               list(visible = FALSE, targets = c(1:3, 7:9))
             )
           )

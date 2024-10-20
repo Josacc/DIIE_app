@@ -89,6 +89,14 @@ dashboardPage(
       .content-wrapper {
         background-color: #FFFFFF;
       }
+      .btn_custom_interno_1 {
+        background-color: #3c8dbc;
+        color: white;
+      }
+      .btn_custom_interno_2 {
+        background-color: navy;
+        color: white;
+      }
     "
     ))),
     fullscreen_all(click_id = "page_full"),
