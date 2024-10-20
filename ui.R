@@ -14,7 +14,7 @@ library(shinythemes)
 
 
 source("contact/contact.R")
-# source("modules/actualizacion.R")
+source("modules/actualizacion.R")
 
 secure_app(
   theme    = shinytheme("flatly"),
@@ -617,17 +617,7 @@ dashboardPage(
 
 # Actualización -----------------------------------------------------------
 
-          # actualizacion_UI("id_actualizacion"),
-          tabPanel(
-            title = strong(uiOutput("update"), style = "color: #3c8dbc;font-size: 12px;"),
-            h4(strong("Historial de seguimiento")),
-            br(),
-            DTOutput("database_original"),
-            br(),
-            br(),
-            br(),
-            br()
-          )
+          actualizacion_UI("id_module_actualizacion")
         )
       )
     )

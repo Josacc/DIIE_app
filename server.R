@@ -8,7 +8,7 @@ library(shinydashboard)
 library(shinyauthr)
 library(shinymanager)
 
-# source("modules/actualizacion.R")
+source("modules/actualizacion.R")
 source("functions/datatable_something.R")
 
 function(input, output, session) {
@@ -348,10 +348,7 @@ function(input, output, session) {
 
 # Actualización ----------------------------------------------
 
-    # actualizacion_Server("id_actualizacion")
-  output$database_original <- renderDT({
-      datatable_actualizacion(data()[[1]])
-  })
+  actualizacion_Server("id_module_actualizacion", data)
 
 
 # Cuestionarios "FIRMA Y SELLO" --------------------------------------------

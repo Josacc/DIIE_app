@@ -1,38 +1,29 @@
-# Actualización module
+# "Actualización" module
+
+# module UI
 actualizacion_UI <- function(id) {
   tabPanel(
     title = strong(
-      uiOutput(NS(id, "update")),
-      style = "color: #3c8dbc;font-size: 12px;"
+      textOutput(NS(id, "update")),
+      style = "color: #3c8dbc; font-size: 12px;"
     ),
     h4(strong("Historial de seguimiento")),
     br(),
-    br(),
-    DTOutput(NS(id, "database_original"))
+    DTOutput(NS(id, "database_original")),
+    br(), br(), br(), br()
   )
 }
 
-actualizacion_Server <- function(id) {
+# module server
+actualizacion_Server <- function(id, .data) {
+  stopifnot(is.reactive(.data))
   moduleServer(id, function(input, output, session) {
-
-    output$update <- renderUI({
-      req(data())
-      str_c("Actualización")# ", data()[[3]])
+    output$update <- renderText({
+      req(.data())
+      str_c("Actualización ", (.data())[[3]])
     })
-
     output$database_original <- renderDT({
-      data()[[1]] %>%
-        datatable(
-        rownames   = FALSE,
-        filter     = "top",
-        options    = list(
-          pageLength  = 5,
-          language    = list(
-            url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-          )
-        )
-      )
+      datatable_actualizacion((.data())[[1]])
     })
-
   })
 }
