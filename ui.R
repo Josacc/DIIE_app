@@ -50,7 +50,8 @@ dashboardPage(
     titleWidth = 130,
     tags$li(
       class = "dropdown",
-      actionBttn("page_full", label = "", style = "minimal", icon = icon("maximize"))
+      style = "display: flex; align-items: center; height: 50px;",
+      actionBttn("page_full", style = "stretch", icon("maximize"))
     ),
     dropdownMenu(
       type        = "messages",
@@ -185,7 +186,7 @@ dashboardPage(
 
           navbarMenu(
             "Observaciones",
-            icon = icon("chart-column"),
+            icon = icon("square-poll-vertical"),
             tabPanel(
               "Top 10",
               h4(
@@ -335,7 +336,7 @@ dashboardPage(
 
           navbarMenu(
             "Cuestionarios",
-            icon = icon("chart-column"),
+            icon = icon("square-poll-vertical"),
             tabPanel(
               "Revisión OC",
               tabsetPanel(
@@ -602,7 +603,7 @@ dashboardPage(
 
           tabPanel(
             "Interno",
-            icon = icon("chart-column"),
+            icon = icon("square-poll-vertical"),
             div(
               class = "pull-right",
               logoutUI(
