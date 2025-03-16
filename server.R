@@ -27,46 +27,46 @@ function(input, output, session) {
 
 # CNGAE 2023 --------------------------------------------------------------------
 
-  data <- reactive({
-    req(input$file_upload)
-    ext <- file_ext(input$file_upload$datapath)
-    feedbackDanger("file_upload", ext != "xlsx", "Extensión desconocida")
-
-    if (!identical(ext, "xlsx")) {
-      return(NULL)
-    }
-
-    req(identical(ext, "xlsx"))
-    pre_data <- read_xlsx(input$file_upload$datapath)
-    condition <- identical(names(pre_data)[2], "INSTITUTO NACIONAL DE ESTADÍSTICA Y GEOGRAFÍA") &&
-      identical(pre_data[[3,2]],  "CNGAE 2024") &&
-      identical(pre_data[[7,1]],  "Folio") &&
-      identical(pre_data[[7,3]],  "Entidad") &&
-      identical(pre_data[[7,5]],  "Usuario") &&
-      identical(pre_data[[7,6]],  "Perfil") &&
-      identical(pre_data[[7,8]],  "Registro") &&
-      identical(pre_data[[7,10]], "Estatus") &&
-      identical(pre_data[[7,12]], "Observación") &&
-      identical(pre_data[[7,15]], "Contador de días")
-    feedbackDanger("file_upload", !condition, "Archivo desconocido")
-
-    if (!condition) {
-      return(NULL)
-    }
-
-    req(condition)
-    id <- showNotification(strong("Leyendo...",
-                                  style = "color: #0323f5;font-size: 15px;font-style: italic;"),
-                           type = "message", duration = NULL)
-    on.exit(removeNotification(id), add = TRUE)
-
-    database_2023     <- data_and_update(input$file_upload$datapath)[[1]]
-    update_2023       <- data_and_update(input$file_upload$datapath)[[2]]
-    database_obs_2023 <- team_data(reviewer_team, database_2023) %>%
-      filter(`Cantidad de obs` > 0)
-
-    return(list(database_2023, database_obs_2023, update_2023))
-  })
+  # data <- reactive({
+  #   req(input$file_upload)
+  #   ext <- file_ext(input$file_upload$datapath)
+  #   feedbackDanger("file_upload", ext != "xlsx", "Extensión desconocida")
+  #
+  #   if (!identical(ext, "xlsx")) {
+  #     return(NULL)
+  #   }
+  #
+  #   req(identical(ext, "xlsx"))
+  #   pre_data <- read_xlsx(input$file_upload$datapath)
+  #   condition <- identical(names(pre_data)[2], "INSTITUTO NACIONAL DE ESTADÍSTICA Y GEOGRAFÍA") &&
+  #     identical(pre_data[[3,2]],  "CNGAE 2024") &&
+  #     identical(pre_data[[7,1]],  "Folio") &&
+  #     identical(pre_data[[7,3]],  "Entidad") &&
+  #     identical(pre_data[[7,5]],  "Usuario") &&
+  #     identical(pre_data[[7,6]],  "Perfil") &&
+  #     identical(pre_data[[7,8]],  "Registro") &&
+  #     identical(pre_data[[7,10]], "Estatus") &&
+  #     identical(pre_data[[7,12]], "Observación") &&
+  #     identical(pre_data[[7,15]], "Contador de días")
+  #   feedbackDanger("file_upload", !condition, "Archivo desconocido")
+  #
+  #   if (!condition) {
+  #     return(NULL)
+  #   }
+  #
+  #   req(condition)
+  #   id <- showNotification(strong("Leyendo...",
+  #                                 style = "color: #0323f5;font-size: 15px;font-style: italic;"),
+  #                          type = "message", duration = NULL)
+  #   on.exit(removeNotification(id), add = TRUE)
+  #
+  #   database_2023     <- data_and_update(input$file_upload$datapath)[[1]]
+  #   update_2023       <- data_and_update(input$file_upload$datapath)[[2]]
+  #   database_obs_2023 <- team_data(reviewer_team, database_2023) %>%
+  #     filter(`Cantidad de obs` > 0)
+  #
+  #   return(list(database_2023, database_obs_2023, update_2023))
+  # })
 
   output$update <- renderText({
     req(data())
@@ -90,62 +90,62 @@ function(input, output, session) {
   })
 
   # Info upload "Historial de seguimiento con extensión 'xlsx'".
-  observeEvent(input$info_button_file_upload, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        tags$h4('Recuerda cargar el historial de seguimiento en formato “xlsx”',
-               style = "font-weight: bold; text-align: center"),
-        tags$br(),
-        style = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        'El reporte',
-        tags$b('Historial de seguimiento', style = "color: #0076C8"),
-        'lo puedes descargar desde la página de IKTAN siguiendo estos pasos:',
-        tags$br(),
-        tags$br(),
-        tags$ol(
-          tags$li('Ingresa tus credenciales.'),
-          tags$li('Selecciona tu perfil de acceso.'),
-          tags$li('Selecciona la ventana “Reportes”.'),
-          tags$br(),
-          tags$img(src = "ventana_reportes.png" ,
-                   `style` = "display: block;
-                                                             margin-left: auto;
-                                                             margin-right: auto;
-                                                             width: 25%;"
-          ),
-          tags$br(),
-          tags$li('Selecciona el recuadro “Reporte”.'),
-          tags$li('Elige el formato “XLSX”.'),
-          tags$li('Elige la opción “Historial de seguimiento”.'),
-          tags$li('Presiona el botón aceptar.'),
-          tags$li('Da clic en el archivo generado para descargarlo.'),
-          tags$br(),
-          tags$img(src = "select_reportes.png" ,
-                   `style` = "display: block;
-                                                             margin-left:  -4.3rem;
-                                                             margin-right: auto;
-                                                             width: 105%;"
-          ),
-          tags$br(),
-          tags$li('En tu explorador de archivos localiza dónde se descargó
-        la carpeta comprimida del reporte de seguimiento, generalmente
-        la podrás encontrar en la carpeta de descargas.'),
-          tags$li('Extrae el archivo de la carpeta comprimida.'),
-          tags$li('¡Listo! Ya tienes el archivo que debes cargar en la aplicación.')
-        )
-      ),
-      html  = TRUE,
-      width = "55%"
-    )
-  })
+  # observeEvent(input$info_button_file_upload, {
+  #   show_alert(
+  #     session = session,
+  #     title   = "",
+  #     text    = tags$div(
+  #       tags$h3("Información",
+  #               style = "color: #0076C8; font-weight: bold; text-align: center"),
+  #       tags$br(),
+  #       tags$br(),
+  #       tags$h4('Recuerda cargar el historial de seguimiento en formato “xlsx”',
+  #              style = "font-weight: bold; text-align: center"),
+  #       tags$br(),
+  #       style = "text-align: justify;
+  #       margin-left:  auto;
+  #       margin-right: auto;",
+  #       'El reporte',
+  #       tags$b('Historial de seguimiento', style = "color: #0076C8"),
+  #       'lo puedes descargar desde la página de IKTAN siguiendo estos pasos:',
+  #       tags$br(),
+  #       tags$br(),
+  #       tags$ol(
+  #         tags$li('Ingresa tus credenciales.'),
+  #         tags$li('Selecciona tu perfil de acceso.'),
+  #         tags$li('Selecciona la ventana “Reportes”.'),
+  #         tags$br(),
+  #         tags$img(src = "ventana_reportes.png" ,
+  #                  `style` = "display: block;
+  #                                                            margin-left: auto;
+  #                                                            margin-right: auto;
+  #                                                            width: 25%;"
+  #         ),
+  #         tags$br(),
+  #         tags$li('Selecciona el recuadro “Reporte”.'),
+  #         tags$li('Elige el formato “XLSX”.'),
+  #         tags$li('Elige la opción “Historial de seguimiento”.'),
+  #         tags$li('Presiona el botón aceptar.'),
+  #         tags$li('Da clic en el archivo generado para descargarlo.'),
+  #         tags$br(),
+  #         tags$img(src = "select_reportes.png" ,
+  #                  `style` = "display: block;
+  #                                                            margin-left:  -4.3rem;
+  #                                                            margin-right: auto;
+  #                                                            width: 105%;"
+  #         ),
+  #         tags$br(),
+  #         tags$li('En tu explorador de archivos localiza dónde se descargó
+  #       la carpeta comprimida del reporte de seguimiento, generalmente
+  #       la podrás encontrar en la carpeta de descargas.'),
+  #         tags$li('Extrae el archivo de la carpeta comprimida.'),
+  #         tags$li('¡Listo! Ya tienes el archivo que debes cargar en la aplicación.')
+  #       )
+  #     ),
+  #     html  = TRUE,
+  #     width = "55%"
+  #   )
+  # })
 
 
 # NAVBARMENU Observaciones ------------------------------------------------
@@ -230,120 +230,120 @@ function(input, output, session) {
 
 # Cuestionarios "REVISIÓN OC" ---------------------------------------------
 
-  database_questionnaires <- reactive({
-
-    vector_folios_no_aplica <- DT_folio_no_aplica(data()[[1]]) %>%
-      pull()
-
-    .data <- data()[[1]] %>%
-      filter(str_detect(Estatus, "Revisión OC"), Perfil == "RESPONSABLE OPERATIVO") %>%
-      left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
-      select(-Registro) %>%
-      rename(Registro = aux_var) %>%
-      filter(!(Folio %in% vector_folios_no_aplica))
-
-
-    if (nrow(.data) == 0) {
-      return(NULL)
-    }
-
-    return(.data)
-  })
+  # database_questionnaires <- reactive({
+  #
+  #   vector_folios_no_aplica <- DT_folio_no_aplica(data()[[1]]) %>%
+  #     pull()
+  #
+  #   .data <- data()[[1]] %>%
+  #     filter(str_detect(Estatus, "Revisión OC"), Perfil == "RESPONSABLE OPERATIVO") %>%
+  #     left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
+  #     select(-Registro) %>%
+  #     rename(Registro = aux_var) %>%
+  #     filter(!(Folio %in% vector_folios_no_aplica))
+  #
+  #
+  #   if (nrow(.data) == 0) {
+  #     return(NULL)
+  #   }
+  #
+  #   return(.data)
+  # })
 
 
 # Cuestionarios enviados a revisión OC --------------------------------------------------------
 
-  output$text_count_questionnaires_2023 <- renderText({
-    validate(need(database_questionnaires(), "0"))
-    count_arrival_questionnaires_week(database_questionnaires(), input$id_slider_date_questionnaires_2023)
-  })
-
-  output$plot_arrival_questionnaires <- renderPlotly({
-    validate(need(database_questionnaires(), "Sin información"))
-    x <- input$id_slider_date_questionnaires_2023
-    plot_arrival_questionnaires_current_year(database_questionnaires(), x)
-  })
+  # output$text_count_questionnaires_2023 <- renderText({
+  #   validate(need(database_questionnaires(), "0"))
+  #   count_arrival_questionnaires_week(database_questionnaires(), input$id_slider_date_questionnaires_2023)
+  # })
+  #
+  # output$plot_arrival_questionnaires <- renderPlotly({
+  #   validate(need(database_questionnaires(), "Sin información"))
+  #   x <- input$id_slider_date_questionnaires_2023
+  #   plot_arrival_questionnaires_current_year(database_questionnaires(), x)
+  # })
 
 
 # Comparativo global 2023 VS 2024 -------------------------------------------------------
 
-  output$text_count_questionnaires_weeks_2023 <- renderText({
-    validate(need(database_questionnaires(), "0"))
-    x <- input$id_slider_date_questionnaires_weeks
-    count_arrival_questionnaires_week(database_questionnaires(), ymd("2024-02-19") + weeks(x)) # (update every year!).
-  })
-
-  output$text_count_questionnaires_weeks_2022 <- renderText({
-    x <- input$id_slider_date_questionnaires_weeks
-    count_arrival_questionnaires_week(database_questionnaires_previous_year, ymd("2023-03-06") + weeks(x)) # (update every year!).
-  })
-
-  output$plot_arrival_questionnaires_weeks <- renderPlotly({
-    validate(need(database_questionnaires(), "Sin información"))
-    x <- input$id_slider_date_questionnaires_weeks
-    plot_arrival_questionnaires_current_year(database_questionnaires(), ymd("2024-02-19") + weeks(x), "2024") # (update every year!).
-  })
-
-  output$plot_arrival_questionnaires_weeks_previous_year <- renderPlotly({
-    x <- input$id_slider_date_questionnaires_weeks
-    plot_arrival_questionnaires_previous_year(database_questionnaires_previous_year, ymd("2023-03-06") + weeks(x), "2023") # (update every year!).
-  })
+  # output$text_count_questionnaires_weeks_2023 <- renderText({
+  #   validate(need(database_questionnaires(), "0"))
+  #   x <- input$id_slider_date_questionnaires_weeks
+  #   count_arrival_questionnaires_week(database_questionnaires(), ymd("2024-02-19") + weeks(x)) # (update every year!).
+  # })
+  #
+  # output$text_count_questionnaires_weeks_2022 <- renderText({
+  #   x <- input$id_slider_date_questionnaires_weeks
+  #   count_arrival_questionnaires_week(database_questionnaires_previous_year, ymd("2023-03-06") + weeks(x)) # (update every year!).
+  # })
+  #
+  # output$plot_arrival_questionnaires_weeks <- renderPlotly({
+  #   validate(need(database_questionnaires(), "Sin información"))
+  #   x <- input$id_slider_date_questionnaires_weeks
+  #   plot_arrival_questionnaires_current_year(database_questionnaires(), ymd("2024-02-19") + weeks(x), "2024") # (update every year!).
+  # })
+  #
+  # output$plot_arrival_questionnaires_weeks_previous_year <- renderPlotly({
+  #   x <- input$id_slider_date_questionnaires_weeks
+  #   plot_arrival_questionnaires_previous_year(database_questionnaires_previous_year, ymd("2023-03-06") + weeks(x), "2023") # (update every year!).
+  # })
 
 
 # Cuestionarios enviados a OC por entidad -------------------------
 
-  max_questionnaries_day <- reactive({
-    req(database_questionnaires())
-    database_questionnaires() %>%
-      count(Registro, Censo) %>%
-      rename(`Cuestionarios enviados a revisión OC` = names(.)[[3]]) %>%
-      group_by(Censo) %>%
-      summarise(y_max = max(`Cuestionarios enviados a revisión OC`))
-  })
-
-  reactive_arrival_questionnaires_entitie <- reactive({
-    req(max_questionnaries_day())
-    switch (input$id_questionnaires_vs_entities_2023,
-            NACIONAL                          = plot_arrival_questionnaires_grid_census_2023(database_questionnaires(), max_questionnaries_day()),
-            `AGUASCALIENTES`                  = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[1]),
-            `BAJA CALIFORNIA`                 = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[2]),
-            `BAJA CALIFORNIA SUR`             = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[3]),
-            `CAMPECHE`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[4]),
-            `COAHUILA DE ZARAGOZA`            = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[5]),
-            `COLIMA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[6]),
-            `CHIAPAS`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[7]),
-            `CHIHUAHUA`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[8]),
-            `CIUDAD DE MÉXICO`                = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[9]),
-            `DURANGO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[10]),
-            `GUANAJUATO`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[11]),
-            `GUERRERO`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[12]),
-            `HIDALGO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[13]),
-            `JALISCO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[14]),
-            `MÉXICO`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[15]),
-            `MICHOACÁN DE OCAMPO`             = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[16]),
-            `MORELOS`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[17]),
-            `NAYARIT`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[18]),
-            `NUEVO LEÓN`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[19]),
-            `OAXACA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[20]),
-            `PUEBLA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[21]),
-            `QUERÉTARO`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[22]),
-            `QUINTANA ROO`                    = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[23]),
-            `SAN LUIS POTOSÍ`                 = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[24]),
-            `SINALOA`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[25]),
-            `SONORA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[26]),
-            `TABASCO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[27]),
-            `TAMAULIPAS`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[28]),
-            `TLAXCALA`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[29]),
-            `VERACRUZ DE IGNACIO DE LA LLAVE` = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[30]),
-            `YUCATÁN`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[31]),
-            `ZACATECAS`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[32])
-    )
-  })
-
-  output$plot_arrival_questionnaires_entitie_2023 <- renderPlotly({
-    validate(need(reactive_arrival_questionnaires_entitie(), "Sin cuestionarios enviados a revisión OC"))
-    reactive_arrival_questionnaires_entitie()
-  })
+  # max_questionnaries_day <- reactive({
+  #   req(database_questionnaires())
+  #   database_questionnaires() %>%
+  #     count(Registro, Censo) %>%
+  #     rename(`Cuestionarios enviados a revisión OC` = names(.)[[3]]) %>%
+  #     group_by(Censo) %>%
+  #     summarise(y_max = max(`Cuestionarios enviados a revisión OC`))
+  # })
+  #
+  # reactive_arrival_questionnaires_entitie <- reactive({
+  #   req(max_questionnaries_day())
+  #   switch (input$id_questionnaires_vs_entities_2023,
+  #           NACIONAL                          = plot_arrival_questionnaires_grid_census_2023(database_questionnaires(), max_questionnaries_day()),
+  #           `AGUASCALIENTES`                  = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[1]),
+  #           `BAJA CALIFORNIA`                 = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[2]),
+  #           `BAJA CALIFORNIA SUR`             = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[3]),
+  #           `CAMPECHE`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[4]),
+  #           `COAHUILA DE ZARAGOZA`            = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[5]),
+  #           `COLIMA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[6]),
+  #           `CHIAPAS`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[7]),
+  #           `CHIHUAHUA`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[8]),
+  #           `CIUDAD DE MÉXICO`                = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[9]),
+  #           `DURANGO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[10]),
+  #           `GUANAJUATO`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[11]),
+  #           `GUERRERO`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[12]),
+  #           `HIDALGO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[13]),
+  #           `JALISCO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[14]),
+  #           `MÉXICO`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[15]),
+  #           `MICHOACÁN DE OCAMPO`             = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[16]),
+  #           `MORELOS`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[17]),
+  #           `NAYARIT`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[18]),
+  #           `NUEVO LEÓN`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[19]),
+  #           `OAXACA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[20]),
+  #           `PUEBLA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[21]),
+  #           `QUERÉTARO`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[22]),
+  #           `QUINTANA ROO`                    = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[23]),
+  #           `SAN LUIS POTOSÍ`                 = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[24]),
+  #           `SINALOA`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[25]),
+  #           `SONORA`                          = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[26]),
+  #           `TABASCO`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[27]),
+  #           `TAMAULIPAS`                      = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[28]),
+  #           `TLAXCALA`                        = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[29]),
+  #           `VERACRUZ DE IGNACIO DE LA LLAVE` = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[30]),
+  #           `YUCATÁN`                         = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[31]),
+  #           `ZACATECAS`                       = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[32])
+  #   )
+  # })
+  #
+  # output$plot_arrival_questionnaires_entitie_2023 <- renderPlotly({
+  #   validate(need(reactive_arrival_questionnaires_entitie(), "Sin cuestionarios enviados a revisión OC"))
+  #   reactive_arrival_questionnaires_entitie()
+  # })
 
 
 # Actualización ----------------------------------------------
