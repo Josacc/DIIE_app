@@ -1,4 +1,17 @@
+# 'Text mining' module ----------------------------------------------------
 
+tm_tabPanels <- function(id, censo_name) {
+
+  tabPanel(
+    title = censo_name,
+    selectInput(
+      inputId = NS(id, str_c("id_", censo_name)),
+      label   = "Módulo",
+      choices = str_c("Módulo ", seq(module_count[module_count$Censo == censo_name, ][[2]]))
+    )
+  )
+
+}
 
 
 navbarMenu(
