@@ -27,6 +27,7 @@ function(input, output, session) {
 
 # CNGAE 2023 --------------------------------------------------------------------
 
+  CNGAE_current_year_Server('id_CNGAE_current_year')
   # data <- reactive({
   #   req(input$file_upload)
   #   ext <- file_ext(input$file_upload$datapath)

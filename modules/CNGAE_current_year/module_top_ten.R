@@ -57,7 +57,7 @@ top_ten_UI <- function(id) {
   )
 }
 
-top_ten_Server <- function(id) {
+top_ten_Server <- function(id, data) { # add 'data' argument
   moduleServer(id, function(input, output, session) {
 
     observeEvent(input$id_top_ten_question_2023, {
@@ -66,29 +66,29 @@ top_ten_Server <- function(id) {
 
     reactive_top_ten_questions_2023 <- reactive({
       switch(input$id_top_ten_question_2023,
-             CNGE   = switch(input$id_CNGE_2023,
+             CNGE   = switch(input$id_CNGE,
                              `Módulo 1` = top_ten_questions(data()[[2]], "CNGE", "M1"),
                              `Módulo 2` = top_ten_questions(data()[[2]], "CNGE", "M2"),
                              `Módulo 3` = top_ten_questions(data()[[2]], "CNGE", "M3"),
                              `Módulo 4` = top_ten_questions(data()[[2]], "CNGE", "M4"),
                              `Módulo 5` = top_ten_questions(data()[[2]], "CNGE", "M5")
              ),
-             CNSPE   = switch(input$id_CNSPE_2023,
+             CNSPE   = switch(input$id_CNSPE,
                               `Módulo 1` = top_ten_questions(data()[[2]], "CNSPE", "M1"),
                               `Módulo 2` = top_ten_questions(data()[[2]], "CNSPE", "M2")
              ),
-             CNSIPEE = switch(input$id_CNSIPEE_2023,
+             CNSIPEE = switch(input$id_CNSIPEE,
                               `Módulo 1` = top_ten_questions(data()[[2]], "CNSIPEE", "M1"),
                               `Módulo 2` = top_ten_questions(data()[[2]], "CNSIPEE", "M2")
              ),
-             CNPJE   = switch(input$id_CNPJE_2023,
+             CNPJE   = switch(input$id_CNPJE,
                               `Módulo 1` = top_ten_questions(data()[[2]], "CNPJE", "M1"),
                               `Módulo 2` = top_ten_questions(data()[[2]], "CNPJE", "M2"),
                               `Módulo 3` = top_ten_questions(data()[[2]], "CNPJE", "M3"),
                               `Módulo 4` = top_ten_questions(data()[[2]], "CNPJE", "M4"),
                               `Módulo 5` = top_ten_questions(data()[[2]], "CNPJE", "M5")
              ),
-             CNIJE   = switch(input$id_CNIJE_2023,
+             CNIJE   = switch(input$id_CNIJE,
                               `Módulo 1` = top_ten_questions(data()[[2]], "CNIJE", "M1"),
                               `Módulo 2` = top_ten_questions(data()[[2]], "CNIJE", "M2"),
                               `Módulo 3` = top_ten_questions(data()[[2]], "CNIJE", "M3"),
@@ -97,15 +97,15 @@ top_ten_Server <- function(id) {
                               `Módulo 6` = top_ten_questions(data()[[2]], "CNIJE", "M6"),
                               `Módulo 7` = top_ten_questions(data()[[2]], "CNIJE", "M7")
              ),
-             CNPLE = switch(input$id_CNPLE_2023,
+             CNPLE = switch(input$id_CNPLE,
                             `Módulo 1` = top_ten_questions(data()[[2]], "CNPLE", "M1"),
                             `Módulo 2` = top_ten_questions(data()[[2]], "CNPLE", "M2")
              ),
-             CNDHE = switch(input$id_CNDHE_2023,
+             CNDHE = switch(input$id_CNDHE,
                             `Módulo 1` = top_ten_questions(data()[[2]], "CNDHE", "M1"),
                             `Módulo 2` = top_ten_questions(data()[[2]], "CNDHE", "M2")
              ),
-             CNTAIPPDPE = switch(input$id_CNTAIPPDPE_2023,
+             CNTAIPPDPE = switch(input$id_CNTAIPPDPE,
                                  `Módulo 1` = top_ten_questions(data()[[2]], "CNTAIPPDPE", "M1"),
                                  `Módulo 2` = top_ten_questions(data()[[2]], "CNTAIPPDPE", "M2"),
                                  `Módulo 3` = top_ten_questions(data()[[2]], "CNTAIPPDPE", "M3")

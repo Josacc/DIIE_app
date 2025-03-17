@@ -94,13 +94,13 @@ CNGAE_current_year_Server <- function(id) {
     })
 
     info_analitica_Server('id_info_analitica')
-    upload_file_Server('id_upload_file')
+    data <- upload_file_Server('id_upload_file')
     # observaciones
-    top_ten_Server('id_top_ten')
+    top_ten_Server('id_top_ten', data)
     # revisión oc
-    revision_oc_Server('id_revision_oc')
+    # revision_oc_Server('id_revision_oc')
     # en proceso de firma y sello (1)
-    proceso_firma_sello1_Server('id_proceso_firma_sello1')
+    # proceso_firma_sello1_Server('id_proceso_firma_sello1')
 
   })
 }
