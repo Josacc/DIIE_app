@@ -68,26 +68,26 @@ function(input, output, session) {
   #   return(list(database_2023, database_obs_2023, update_2023))
   # })
 
-  output$update <- renderText({
-    req(data())
-    str_c("Actualización ", data()[[3]])
-  })
+  # output$update <- renderText({
+  #   req(data())
+  #   str_c("Actualización ", data()[[3]])
+  # })
 
-  hideTab(inputId = "id_navbar_current_year", target = "Observaciones")
-  hideTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
-  hideTab(inputId = "id_navbar_current_year", target = "Interno")
-
-  observeEvent(is_null(data()), {
-    hideTab(inputId = "id_navbar_current_year", target = "Observaciones")
-    hideTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
-    hideTab(inputId = "id_navbar_current_year", target = "Interno")
-  })
-
-  observeEvent(data(), {
-    showTab(inputId = "id_navbar_current_year", target = "Observaciones")
-    showTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
-    showTab(inputId = "id_navbar_current_year", target = "Interno")
-  })
+  # hideTab(inputId = "id_navbar_current_year", target = "Observaciones")
+  # hideTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
+  # hideTab(inputId = "id_navbar_current_year", target = "Interno")
+  #
+  # observeEvent(is_null(data()), {
+  #   hideTab(inputId = "id_navbar_current_year", target = "Observaciones")
+  #   hideTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
+  #   hideTab(inputId = "id_navbar_current_year", target = "Interno")
+  # })
+  #
+  # observeEvent(data(), {
+  #   showTab(inputId = "id_navbar_current_year", target = "Observaciones")
+  #   showTab(inputId = "id_navbar_current_year", target = "Cuestionarios")
+  #   showTab(inputId = "id_navbar_current_year", target = "Interno")
+  # })
 
   # Info upload "Historial de seguimiento con extensión 'xlsx'".
   # observeEvent(input$info_button_file_upload, {
@@ -348,713 +348,172 @@ function(input, output, session) {
 
 # Actualización ----------------------------------------------
 
-  actualizacion_Server("id_module_actualizacion", data)
+  # actualizacion_Server("id_module_actualizacion", data)
 
 
 # Cuestionarios "FIRMA Y SELLO" --------------------------------------------
 
-  # Database on questionnaires with status "firma y sello(1)"
-  database_firma_sello <- reactive({
-
-    vector_folios_no_aplica <- DT_folio_no_aplica(data()[[1]]) %>%
-      pull()
-
-    .data <- data()[[1]] %>%
-      filter(str_detect(Estatus, "En proceso de firma y sello \\(1\\)")) %>%
-      left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
-      select(-Registro) %>%
-      rename(Registro = aux_var) %>%
-      filter(!(Folio %in% vector_folios_no_aplica))
-
-    if (nrow(.data) == 0) {
-      return(NULL)
-    }
-
-    return(.data)
-  })
-
-
-# Cuestionarios en proceso de firma y sello (1) ---------------------------
-  # Change control on sidebar panel: DT and plots by "semana" and "día".
-  observeEvent(input$id_controller_plot_semana_day, {
-    updateTabsetPanel(session, "id_plot_questionnaries_firma_sello_select", input$id_controller_plot_semana_day)
-  })
-
-  # Change control on main panel: DT and plots by "semana" and "día".
-  observeEvent(input$id_controller_plot_semana_day, {
-    updateTabsetPanel(session, "id_plot_DT_questionnaries_firma_sello_select", input$id_controller_plot_semana_day)
-  })
-
-  # Observe event plot global and plot by census and DT-
-  observeEvent(input$id_questionnaires_firma_sello_census, {
-    if (input$id_questionnaires_firma_sello_census == "GLOBAL") {
-      return(updateTabsetPanel(session, inputId = "id_plot_DT", selected = "global"))
-    }
-    return(updateTabsetPanel(session, inputId = "id_plot_DT", selected = "census"))
-  })
-
-  # Plot global
-  reactive_questionnaires_firma_sello_week_global <- reactive({
-    req(database_firma_sello())
-    plot_questionnaires_firma_sello_week(database_firma_sello())
-  })
-
-  output$plot_questionnaires_firma_sello_week_global <- renderPlotly({
-    validate(need(reactive_questionnaires_firma_sello_week_global(),
-                  "Sin cuestionarios en proceso de firma y sello (1)"))
-    reactive_questionnaires_firma_sello_week_global()
-  })
-
-  # Plot and DT by census
-  reactive_questionnaires_firma_sello_week_census <- reactive({
-    req(database_firma_sello())
-    plot_questionnaires_firma_sello_week_project(database_firma_sello(), input$id_questionnaires_firma_sello_census)
-  })
-
-  output$plot_questionnaires_firma_sello_week_census <- renderPlotly({
-    validate(need(reactive_questionnaires_firma_sello_week_census(),
-                  "Sin cuestionarios en proceso de firma y sello (1)"))
-    reactive_questionnaires_firma_sello_week_census()
-  })
-
-  output$table_questionnaires_set_free_census <- renderDataTable({
-    validate(need(reactive_questionnaires_firma_sello_week_census(), ""))
-    datatable(
-      DT_questionnaires_firma_sello_census(database_firma_sello(), input$id_questionnaires_firma_sello_census),
-      rownames = FALSE,
-      options  = list(
-        pageLength = 5,
-        language   = list(
-          url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-        )
-      )
-    )
-  })
-
-  # Count set free questionnaires by time range
-  output$text_count_firma_sello_census <- renderText({
-    count_questionnaires_firma_sello(
-      database_firma_sello(),
-      .census = input$id_questionnaires_firma_sello_census,
-      .max    = dmy_hms(data()[[3]]) %>% as_date()
-    )
-  })
-
-  # Update sliderInput; change value
-  observeEvent(!is_null(data()), {
-    updateSliderInput(
-      inputId = "id_slider_date_questionnaires_firma_sello",
-      max = dmy_hms(data()[[3]]) %>% as_date(),
-      value = c(
-        DIIE_dates[[3, 2]],
-        dmy_hms(data()[[3]]) %>% as_date()
-      )
-    )
-  })
-
-  # Change value of count set free questionnaires by day
-  observeEvent(input$id_slider_date_questionnaires_firma_sello, {
-    if ((input$id_slider_date_questionnaires_firma_sello)[1] == DIIE_dates[[3, 2]] &&
-        (input$id_slider_date_questionnaires_firma_sello)[2] == dmy(word(data()[[3]], 1))) {
-      return(updateTabsetPanel(session, inputId = "id_text_questionnaires_firma_sello_range", selected = "accumulated"))
-    }
-    return(updateTabsetPanel(session, inputId = "id_text_questionnaires_firma_sello_range", selected = "range"))
-  })
-
-  output$text_count_firma_sello_accumulated <- renderText({
-    count_questionnaires_firma_sello(
-      database_firma_sello(),
-      .census = "GLOBAL",
-      .max    = (input$id_slider_date_questionnaires_firma_sello)[2]
-    )
-  })
-
-  output$text_count_firma_sello_range <- renderText({
-    count_questionnaires_firma_sello(
-      database_firma_sello(),
-      .census = "GLOBAL",
-      .min    = (input$id_slider_date_questionnaires_firma_sello)[1],
-      .max    = (input$id_slider_date_questionnaires_firma_sello)[2]
-    )
-  })
-
-  # Plots on questionnnaries set free everyday.
-  output$plot_questionnaires_firma_sello_day <- renderPlotly({
-    req(database_firma_sello())
-    plot_questionnaires_firma_sello(database_firma_sello())
-  })
-
-  output$table_questionnaires_set_free_registro <- renderDataTable({
-    req(database_firma_sello())
-    datatable(
-      DT_questionnaires_firma_sello_registro(database_firma_sello()),
-      rownames = FALSE,
-      filter   = "top",
-      options  = list(
-        pageLength = 5,
-        language   = list(
-          url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-        )
-      ),
-      escape = FALSE
-    )
-  })
-
-# Cuestionarios en proceso de firma y sello (1) por entidad ------------
-  reactive_questionnaires_firma_sello_entity <- reactive({
-    req(database_firma_sello())
-    if (input$id_questionnaires_firma_sello_entity == "NACIONAL") {
-      return(plot_questionnaires_firma_sello_light(database_firma_sello()))
-    }
-
-    plot_questionnaires_firma_sello_light_entities(database_firma_sello(), input$id_questionnaires_firma_sello_entity)
-  })
-
-  output$plot_questionnaires_firma_sello_entity <- renderPlotly({
-    validate(need(reactive_questionnaires_firma_sello_entity(), "Sin cuestionarios en proceso de firma y sello (1)"))
-    reactive_questionnaires_firma_sello_entity()
-  })
-
-
-# NAVBARMENU Evaluación ---------------------------------------------------
-
-  observeEvent(input$id_select_panel_entity, {
-    updateTabsetPanel(session, inputId = "id_tab_evaluacion", selected = input$id_select_panel_entity)
-  })
-
-  # Data base for DOE analisys.
-  database_DOE <- reactive(write_database_DOE(data()[[1]]))
-
-  # Data base "evolución del levantamiento".
-  database_evolucion_levantamiento <- reactive(DT_evolucion_levantamiento(database_DOE()))
-
-  # Plot evolución del levantamiento.
-  output$plot_evolucion_levantamiento <- renderPlotly({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE, levels(federal_entities[["Entidad"]])
-            )[["p"]],
-
-            "Regional" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )[["p"]],
-
-            "Estatal" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )[["p"]]
-    )
-
-  })
-
-  # Info evolución del levantamiento.
-  observeEvent(input$info_button_evolucion_levantamiento, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        "Se muestra el avance porcentual de cumplimiento de
-        las actividades 3.2.3.1, 3.2.3.2, 3.2.3.3 y 3.2.4; los meses
-        parametrizan el porcentaje de cuestionarios que han
-        cumplido con cada Actividad (fase).",
-        tags$br(),
-        tags$br(),
-        "La categoría “PENDIENTES” refiere al porcentaje de
-        cuestionarios que no han cumplido con la respectiva Actividad (fase).",
-        tags$br(),
-        tags$br(),
-        dataTableOutput("info_DT_relacion_actividad_estatus")
-      ),
-      html  = TRUE,
-      width = "62%"
-    )
-  })
-
-  output$info_DT_relacion_actividad_estatus <- renderDataTable(
-    datatable(
-      relacion_actividad_fase %>%
-        mutate(
-          `Actividades (fases)` = str_c(c("3.2.3.1 ", "3.2.3.2 ", "3.2.3.3 ", "3.2.4   "), `Actividades (fases)`)
-        ),
-      options = list(
-        dom = 't'
-      ),
-      rownames = FALSE
-    )
-  )
-
-  # Data table evolución del levantamiento.
-  output$table_evolucion_levantamiento <- renderDataTable({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            )[["dframe"]] %>%
-              datatable(
-                options = list(
-                  dom      = 't',
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                ),
-                rownames = FALSE
-              ),
-
-            "Regional" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )[["dframe"]] %>%
-              datatable(
-                options = list(
-                  dom      = 't',
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                ),
-                rownames = FALSE
-              ),
-
-            "Estatal" = plot_DT_evolucion_levantamiento(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )[["dframe"]] %>%
-              datatable(
-                options = list(
-                  dom      = 't',
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                ),
-                rownames = FALSE
-              )
-    )
-
-  })
-
-  # Plot "Recuperación oportuna de la información".
-  output$plot_recuperacion_informacion_oportuna <- renderPlotly({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            )$plot,
-
-            "Regional" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )$plot,
-
-            "Estatal" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )$plot
-    )
-
-  })
-
-  # Info Recuperación oportuna de la información.
-  observeEvent(input$info_button_recuperacion_informacion, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        "La gráfica escinde el cumplimiento de cada actividad (fase) en tres categorías:
-        “En tiempo”, “Fuera de meta” y “PENDIENTES”.  El parámetro de referencia
-        para cada censo es la fecha límite de la actividad marcada en la planeación.",
-        tags$br(),
-        tags$br(),
-        "La categoría “PENDIENTES” refiere al porcentaje de
-        cuestionarios que no han cumplido con la respectiva Actividad (fase)."
-      ),
-      html  = TRUE,
-      width = "50%"
-    )
-  })
-
-  # DT "Recuperación oportuna de la información".
-  output$table_recuperacion_informacion <- renderDataTable({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              ),
-
-            "Regional" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              ),
-
-            "Estatal" = plot_DT_recuperacion_oportuna_informacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              )
-    )
-
-  })
-
-  # Plot "Concertación de citas y entrega de cuestionarios".
-  output$plot_concertacion_entrega <- renderPlot({
-
-    file_citas_agendadas <- "citas_agendadas/xIktan_20231013114346215_citasAgendadas.xlsx"
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            )$plot,
-
-            "Regional" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )$plot,
-
-            "Estatal" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )$plot
-    )
-
-  })
-
-  # DT "Concertación de citas y entrega de cuestionarios".
-  output$table_concertacion_entrega <- renderDataTable({
-
-    file_citas_agendadas <- "citas_agendadas/xIktan_20231013114346215_citasAgendadas.xlsx"
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              ),
-
-            "Regional" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              ),
-
-            "Estatal" = plot_citas_cuestionarios(
-              file_citas_agendadas,
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )$df %>%
-              datatable(
-                rownames = FALSE,
-                filter   = "top",
-                options  = list(
-                  language = list(
-                    url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
-                  )
-                )
-              )
-    )
-
-  })
-
-  # Info Concertación de citas y entrega de cuestionarios.
-  observeEvent(input$info_button_citas_cuestionarios, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: center;
-        margin-left:  auto;
-        margin-right: auto;",
-        'Análisis generado del reporte "Citas agendadas".',
-        tags$br(),
-        tags$br(),
-        "Corte de información: 13/10/2023 11:43 hrs."
-      ),
-      html  = TRUE,
-      width = "35%"
-    )
-  })
-
-  # Plot "Intervalos promedio de recuperación".
-  output$plot_promedio_recuperacion <- renderPlotly({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_intervalo_recuperacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            ),
-
-            "Regional" = plot_intervalo_recuperacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            ),
-
-            "Estatal" = plot_intervalo_recuperacion(
-              database_evolucion_levantamiento(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )
-    )
-
-  })
-
-  # Info Intervalos promedio de recuperación.
-  observeEvent(input$info_button_intervalos_recuperacion, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        "Las gráficas muestran por cuestionario el número de días que tomó recuperar la
-        información desde el inicio proyectado en la
-        planeación de cada censo, hasta el cumplimiento de cada actividad (fase).",
-        tags$br(),
-        "A nivel regional se promedian los resultados obtenidos en cada módulo por las
-        entidades involucradas.",
-        tags$br(),
-        tags$br(),
-        "Abreviaturas:",
-        tags$br(),
-        "Mín: mínimo de días a nivel nacional que tomó recuperar la información.",
-        tags$br(),
-        "Máx: máximo de días a nivel nacional que tomó recuperar la información.",
-        tags$br(),
-        "µ: promedio de días a nivel nacional que tomó recuperar la información."
-      ),
-      html  = TRUE,
-      width = "45%"
-    )
-  })
-
-  # Plot "Revisiones realizadas a los cuestionarios".
-  reactive_revisiones_realizadas <- reactive({
-    req(database_DOE())
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_revisiones_cuestionarios(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            ),
-
-            "Regional" = plot_revisiones_cuestionarios(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            ),
-
-            "Estatal" = plot_revisiones_cuestionarios(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )
-    )
-  })
-
-  output$plot_revisiones_realizadas <- renderPlotly({
-    validate(need(reactive_revisiones_realizadas(), "Sin información"))
-    reactive_revisiones_realizadas()
-  })
-
-  # Info Revisiones realizadas a los cuestionarios.
-  observeEvent(input$info_button_revisiones_cuestionarios, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        "La gráfica muestra por cuestionario el número de revisiones que se han efectuado.",
-        tags$br(),
-        "A nivel regional se promedian los resultados obtenidos en cada módulo por las
-        entidades involucradas.",
-        tags$br(),
-        tags$br(),
-        "Abreviaturas:",
-        tags$br(),
-        "Mín: mínimo de revisiones a nivel nacional.",
-        tags$br(),
-        "Máx: máximo de revisiones a nivel nacional.",
-        tags$br(),
-        "µ: promedio de revisiones a nivel nacional."
-      ),
-      html  = TRUE,
-      width = "31%"
-    )
-  })
-
-  # Plot "Duración del levantamiento por etapas".
-  output$plot_levantamiento_estapas <- renderPlotly({
-
-    switch (input$id_select_panel_entity,
-            "Nacional" = plot_duracion_levantamiento_etapas(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              levels(federal_entities[["Entidad"]])
-            ),
-
-            "Regional" = plot_duracion_levantamiento_etapas(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              federal_entities %>% filter(Regional == input$id_regional_evaluation_DOE) %>% pull(Entidad) %>% as.character()
-            ),
-
-            "Estatal" = plot_duracion_levantamiento_etapas(
-              database_DOE(),
-              input$id_census_evaluation_DOE,
-              input$id_entity_evaluation_DOE
-            )
-    )
-
-  })
-
-  # Info Duración del levantamiento por etapas.
-  observeEvent(input$info_button_levantamiento_estapas, {
-    show_alert(
-      session = session,
-      title   = "",
-      text    = tags$div(
-        tags$h3("Información",
-                style = "color: #0076C8; font-weight: bold; text-align: center"),
-        tags$br(),
-        tags$br(),
-        `style` = "text-align: justify;
-        margin-left:  auto;
-        margin-right: auto;",
-        "La gráfica muestra el promedio de días hábiles que duró cada etapa del levantamiento,
-        las cuales están conformadas por los estatus del historial de seguimiento.",
-        tags$br(),
-        "Las barras con valores negativos denotan que el comienzo y cumplimiento
-        de la actividad se realizó antes de la fecha de inicio considerada en la planeación.",
-        tags$br(),
-        tags$br(),
-        dataTableOutput("info_DT_levantamiento_estapas")
-      ),
-      html  = TRUE,
-      width = "70%"
-    )
-  })
-
-  output$info_DT_levantamiento_estapas <- renderDataTable(
-    datatable(
-      tibble(
-        Etapa = c(
-          "Proceso de llenado",
-          "Revisión ROCE",
-          "Validación OC",
-          "Aclaración de información OC",
-          "Revisión ROCE derivado de OC",
-          "Recuperado con firma y sello"
-        ),
-        Estatus = c(
-          "En proceso de llenado, Aclaración de información parcial y Recuperacion parcial",
-          "Revisión ROCE y Aclaración de información (Revisión ROCE)",
-          "Revisión OC",
-          "Aclaración de información OC y Aclaración ROCE derivado de OC",
-          "Revisión ROCE derivado de OC",
-          "En proceso de firma y sello, Recuperado con firma y sello,
-          En proceso de firma y sello por reconsulta, En aclaración por reconsulta y
-          Recuperado con firma y sello por reconsulta"
-        )
-      ),
-      options = list(
-        dom = 't',
-        columnDefs = list(list(width = '250px', targets = c(0)))
-      ),
-      rownames = FALSE
-    )
-  )
+#   # Database on questionnaires with status "firma y sello(1)"
+#   database_firma_sello <- reactive({
+#
+#     vector_folios_no_aplica <- DT_folio_no_aplica(data()[[1]]) %>%
+#       pull()
+#
+#     .data <- data()[[1]] %>%
+#       filter(str_detect(Estatus, "En proceso de firma y sello \\(1\\)")) %>%
+#       left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
+#       select(-Registro) %>%
+#       rename(Registro = aux_var) %>%
+#       filter(!(Folio %in% vector_folios_no_aplica))
+#
+#     if (nrow(.data) == 0) {
+#       return(NULL)
+#     }
+#
+#     return(.data)
+#   })
+#
+#
+# # Cuestionarios en proceso de firma y sello (1) ---------------------------
+#   # Change control on sidebar panel: DT and plots by "semana" and "día".
+#   observeEvent(input$id_controller_plot_semana_day, {
+#     updateTabsetPanel(session, "id_plot_questionnaries_firma_sello_select", input$id_controller_plot_semana_day)
+#   })
+#
+#   # Change control on main panel: DT and plots by "semana" and "día".
+#   observeEvent(input$id_controller_plot_semana_day, {
+#     updateTabsetPanel(session, "id_plot_DT_questionnaries_firma_sello_select", input$id_controller_plot_semana_day)
+#   })
+#
+#   # Observe event plot global and plot by census and DT-
+#   observeEvent(input$id_questionnaires_firma_sello_census, {
+#     if (input$id_questionnaires_firma_sello_census == "GLOBAL") {
+#       return(updateTabsetPanel(session, inputId = "id_plot_DT", selected = "global"))
+#     }
+#     return(updateTabsetPanel(session, inputId = "id_plot_DT", selected = "census"))
+#   })
+#
+#   # Plot global
+#   reactive_questionnaires_firma_sello_week_global <- reactive({
+#     req(database_firma_sello())
+#     plot_questionnaires_firma_sello_week(database_firma_sello())
+#   })
+#
+#   output$plot_questionnaires_firma_sello_week_global <- renderPlotly({
+#     validate(need(reactive_questionnaires_firma_sello_week_global(),
+#                   "Sin cuestionarios en proceso de firma y sello (1)"))
+#     reactive_questionnaires_firma_sello_week_global()
+#   })
+#
+#   # Plot and DT by census
+#   reactive_questionnaires_firma_sello_week_census <- reactive({
+#     req(database_firma_sello())
+#     plot_questionnaires_firma_sello_week_project(database_firma_sello(), input$id_questionnaires_firma_sello_census)
+#   })
+#
+#   output$plot_questionnaires_firma_sello_week_census <- renderPlotly({
+#     validate(need(reactive_questionnaires_firma_sello_week_census(),
+#                   "Sin cuestionarios en proceso de firma y sello (1)"))
+#     reactive_questionnaires_firma_sello_week_census()
+#   })
+#
+#   output$table_questionnaires_set_free_census <- renderDataTable({
+#     validate(need(reactive_questionnaires_firma_sello_week_census(), ""))
+#     datatable(
+#       DT_questionnaires_firma_sello_census(database_firma_sello(), input$id_questionnaires_firma_sello_census),
+#       rownames = FALSE,
+#       options  = list(
+#         pageLength = 5,
+#         language   = list(
+#           url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
+#         )
+#       )
+#     )
+#   })
+#
+#   # Count set free questionnaires by time range
+#   output$text_count_firma_sello_census <- renderText({
+#     count_questionnaires_firma_sello(
+#       database_firma_sello(),
+#       .census = input$id_questionnaires_firma_sello_census,
+#       .max    = dmy_hms(data()[[3]]) %>% as_date()
+#     )
+#   })
+#
+#   # Update sliderInput; change value
+#   observeEvent(!is_null(data()), {
+#     updateSliderInput(
+#       inputId = "id_slider_date_questionnaires_firma_sello",
+#       max = dmy_hms(data()[[3]]) %>% as_date(),
+#       value = c(
+#         DIIE_dates[[3, 2]],
+#         dmy_hms(data()[[3]]) %>% as_date()
+#       )
+#     )
+#   })
+#
+#   # Change value of count set free questionnaires by day
+#   observeEvent(input$id_slider_date_questionnaires_firma_sello, {
+#     if ((input$id_slider_date_questionnaires_firma_sello)[1] == DIIE_dates[[3, 2]] &&
+#         (input$id_slider_date_questionnaires_firma_sello)[2] == dmy(word(data()[[3]], 1))) {
+#       return(updateTabsetPanel(session, inputId = "id_text_questionnaires_firma_sello_range", selected = "accumulated"))
+#     }
+#     return(updateTabsetPanel(session, inputId = "id_text_questionnaires_firma_sello_range", selected = "range"))
+#   })
+#
+#   output$text_count_firma_sello_accumulated <- renderText({
+#     count_questionnaires_firma_sello(
+#       database_firma_sello(),
+#       .census = "GLOBAL",
+#       .max    = (input$id_slider_date_questionnaires_firma_sello)[2]
+#     )
+#   })
+#
+#   output$text_count_firma_sello_range <- renderText({
+#     count_questionnaires_firma_sello(
+#       database_firma_sello(),
+#       .census = "GLOBAL",
+#       .min    = (input$id_slider_date_questionnaires_firma_sello)[1],
+#       .max    = (input$id_slider_date_questionnaires_firma_sello)[2]
+#     )
+#   })
+#
+#   # Plots on questionnnaries set free everyday.
+#   output$plot_questionnaires_firma_sello_day <- renderPlotly({
+#     req(database_firma_sello())
+#     plot_questionnaires_firma_sello(database_firma_sello())
+#   })
+#
+#   output$table_questionnaires_set_free_registro <- renderDataTable({
+#     req(database_firma_sello())
+#     datatable(
+#       DT_questionnaires_firma_sello_registro(database_firma_sello()),
+#       rownames = FALSE,
+#       filter   = "top",
+#       options  = list(
+#         pageLength = 5,
+#         language   = list(
+#           url = "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json"
+#         )
+#       ),
+#       escape = FALSE
+#     )
+#   })
+#
+# # Cuestionarios en proceso de firma y sello (1) por entidad ------------
+#   reactive_questionnaires_firma_sello_entity <- reactive({
+#     req(database_firma_sello())
+#     if (input$id_questionnaires_firma_sello_entity == "NACIONAL") {
+#       return(plot_questionnaires_firma_sello_light(database_firma_sello()))
+#     }
+#
+#     plot_questionnaires_firma_sello_light_entities(database_firma_sello(), input$id_questionnaires_firma_sello_entity)
+#   })
+#
+#   output$plot_questionnaires_firma_sello_entity <- renderPlotly({
+#     validate(need(reactive_questionnaires_firma_sello_entity(), "Sin cuestionarios en proceso de firma y sello (1)"))
+#     reactive_questionnaires_firma_sello_entity()
+#   })
 
 
 # INTERNO --------------------------------------------------------------
