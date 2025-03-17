@@ -15,15 +15,16 @@ actualizacion_UI <- function(id) {
 }
 
 # module server
-actualizacion_Server <- function(id, .data) {
-  stopifnot(is.reactive(.data))
+actualizacion_Server <- function(id, data) {
+  stopifnot(is.reactive(data))
   moduleServer(id, function(input, output, session) {
     output$update <- renderText({
-      req(.data())
-      str_c("Actualización ", (.data())[[3]])
+      req(data())
+      str_c("Actualización ", (data())[[3]])
     })
+
     output$database_original <- renderDT({
-      datatable_actualizacion((.data())[[1]])
+      datatable_actualizacion((data())[[1]])
     })
   })
 }

@@ -13,7 +13,7 @@ revision_oc_UI <- function(id) {
           sidebarPanel(
             width = 12,
             sliderInput(
-              NS(id, "id_slider_date_questionnaires_2023"),
+              NS(id, "id_slider_date_questionnaires"),
               label = "Línea de tiempo por semana",
               min   = floor_date(DIIE_dates %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3), # CNSIPEE start CE
               max   = ceiling_date(tail(DIIE_dates$diffusion, 1), "week", week_start = 1), # last diffusion
@@ -22,7 +22,7 @@ revision_oc_UI <- function(id) {
               animate = TRUE
             ),
             p(strong("Cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires_2023"), inline = TRUE)),
+              strong(textOutput(NS(id, "text_count_questionnaires"), inline = TRUE)),
               style = "color: #3c8dbc")
           ),
           mainPanel(
@@ -52,11 +52,11 @@ revision_oc_UI <- function(id) {
               animate = TRUE
             ),
             p(strong("Año 2024, cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires_weeks_2023"), inline = TRUE)),
+              strong(textOutput(NS(id, "text_count_questionnaires_weeks"), inline = TRUE)),
               style = "color: #3c8dbc"
             ),
             p(strong("Año 2023, cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires_weeks_2022"), inline = TRUE)),
+              strong(textOutput(NS(id, "text_count_questionnaires_weeks_previous_year"), inline = TRUE)),
               style = "color: #5fa4cc"
             )
           ),
@@ -90,7 +90,7 @@ revision_oc_UI <- function(id) {
           sidebarPanel(
             width = 3,
             selectInput(
-              NS(id, "id_questionnaires_vs_entities_2023"),
+              NS(id, "id_questionnaires_vs_entities"),
               "Entidad",
               choices = c("NACIONAL", levels(entities[[1]]))
             )
@@ -98,7 +98,7 @@ revision_oc_UI <- function(id) {
           mainPanel(
             width = 12,
             plotlyOutput(
-              NS(id, "plot_arrival_questionnaires_entitie_2023"),
+              NS(id, "plot_arrival_questionnaires_entitie"),
               height = "700px"
             )
           )
@@ -108,7 +108,7 @@ revision_oc_UI <- function(id) {
   )
 }
 
-revision_oc_Server <- function(id) {
+revision_oc_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
     database_questionnaires <- reactive({
@@ -130,25 +130,25 @@ revision_oc_Server <- function(id) {
     })
 
     # Cuestionarios enviados a revisión OC
-    output$text_count_questionnaires_2023 <- renderText({
+    output$text_count_questionnaires <- renderText({
       validate(need(database_questionnaires(), "0"))
-      count_arrival_questionnaires_week(database_questionnaires(), input$id_slider_date_questionnaires_2023)
+      count_arrival_questionnaires_week(database_questionnaires(), input$id_slider_date_questionnaires)
     })
 
     output$plot_arrival_questionnaires <- renderPlotly({
       validate(need(database_questionnaires(), "Sin información"))
-      x <- input$id_slider_date_questionnaires_2023
+      x <- input$id_slider_date_questionnaires
       plot_arrival_questionnaires_current_year(database_questionnaires(), x)
     })
 
     # Comparativo global 2023 vs 2024
-    output$text_count_questionnaires_weeks_2023 <- renderText({
+    output$text_count_questionnaires_weeks <- renderText({
       validate(need(database_questionnaires(), "0"))
       x <- input$id_slider_date_questionnaires_weeks
       count_arrival_questionnaires_week(database_questionnaires(), ymd("2024-02-19") + weeks(x)) # (update every year!).
     })
 
-    output$text_count_questionnaires_weeks_2022 <- renderText({
+    output$text_count_questionnaires_weeks_previous_year <- renderText({
       x <- input$id_slider_date_questionnaires_weeks
       count_arrival_questionnaires_week(database_questionnaires_previous_year, ymd("2023-03-06") + weeks(x)) # (update every year!).
     })
@@ -176,7 +176,7 @@ revision_oc_Server <- function(id) {
 
     reactive_arrival_questionnaires_entitie <- reactive({
       req(max_questionnaries_day())
-      switch (input$id_questionnaires_vs_entities_2023,
+      switch (input$id_questionnaires_vs_entities,
               NACIONAL                          = plot_arrival_questionnaires_grid_census_2023(database_questionnaires(), max_questionnaries_day()),
               `AGUASCALIENTES`                  = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[1]),
               `BAJA CALIFORNIA`                 = plot_arrival_questionnaires_entities_2023(database_questionnaires(), levels(entities[[1]])[2]),
@@ -213,7 +213,7 @@ revision_oc_Server <- function(id) {
       )
     })
 
-    output$plot_arrival_questionnaires_entitie_2023 <- renderPlotly({
+    output$plot_arrival_questionnaires_entitie <- renderPlotly({
       validate(need(reactive_arrival_questionnaires_entitie(), "Sin cuestionarios enviados a revisión OC"))
       reactive_arrival_questionnaires_entitie()
     })

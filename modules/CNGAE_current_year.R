@@ -5,6 +5,7 @@ source('modules/CNGAE_current_year/module_upload_file.R')
 source('modules/CNGAE_current_year/module_top_ten.R')
 source('modules/CNGAE_current_year/module_revision_oc.R')
 source('modules/CNGAE_current_year/module_proceso_firma_sello1.R')
+source('modules/CNGAE_current_year/module_actualizacion.R')
 
 CNGAE_current_year_UI <- function(id) {
   tabItem(
@@ -18,29 +19,24 @@ CNGAE_current_year_UI <- function(id) {
       info_analitica_UI(NS(id, 'id_info_analitica')),
       # 'upload file' module
       upload_file_UI(NS(id, 'id_upload_file')),
-
-
-# Observaciones -----------------------------------------------------------
-
+      # Observaciones
       navbarMenu(
         "Observaciones",
         icon = icon("square-poll-vertical"),
         # 'top ten' module
         top_ten_UI(NS(id, 'id_top_ten'))
       ),
-
-
-# Cuestionarios -----------------------------------------------------------
-
+      # Cuestionarios
       navbarMenu(
         "Cuestionarios",
         icon = icon("square-poll-vertical"),
         # 'revisión oc' module
         revision_oc_UI(NS(id, 'id_revision_oc')),
         # 'en proceso de firma y sello (1)' module
-        proceso_firma_sello1_UI(NS(id, 'id_proceso_firma_sello1'))
-      )#, revisar ','
-
+        proceso_firma_sello1_UI(NS(id, 'id_proceso_firma_sello1')),
+        # Actualización
+        actualizacion_UI(NS(id, 'id_module_actualizacion'))
+      )
 
 # Interno -----------------------------------------------------------------
 
@@ -67,9 +63,6 @@ CNGAE_current_year_UI <- function(id) {
       # ),
 
 
-# Actualización -----------------------------------------------------------
-
-      # actualizacion_UI("id_module_actualizacion")
     )
   )
 }
@@ -98,9 +91,12 @@ CNGAE_current_year_Server <- function(id) {
     # observaciones
     top_ten_Server('id_top_ten', data)
     # revisión oc
-    # revision_oc_Server('id_revision_oc')
+    revision_oc_Server('id_revision_oc', data)
     # en proceso de firma y sello (1)
-    # proceso_firma_sello1_Server('id_proceso_firma_sello1')
+    proceso_firma_sello1_Server('id_proceso_firma_sello1', data)
+    # actualización
+    actualizacion_Server("id_module_actualizacion", data)
+
 
   })
 }

@@ -57,14 +57,14 @@ top_ten_UI <- function(id) {
   )
 }
 
-top_ten_Server <- function(id, data) { # add 'data' argument
+top_ten_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
     observeEvent(input$id_top_ten_question, {
       updateTabsetPanel(session, "id_modulo_select", selected = input$id_top_ten_question)
     })
 
-    reactive_top_ten_questions_2023 <- reactive({
+    reactive_top_ten_questions <- reactive({
       switch(input$id_top_ten_question,
              CNGE   = switch(input$id_CNGE,
                              `Módulo 1` = top_ten_questions(data()[[2]], "CNGE", "M1"),
@@ -114,16 +114,16 @@ top_ten_Server <- function(id, data) { # add 'data' argument
     })
 
     output$plot_top_ten_questions <- renderPlotly({
-      validate(need(reactive_top_ten_questions_2023()[[1]], "Sin observaciones"))
-      reactive_top_ten_questions_2023()[[1]]
+      validate(need(reactive_top_ten_questions()[[1]], "Sin observaciones"))
+      reactive_top_ten_questions()[[1]]
     })
 
     output$table_top_ten_questions <- renderDataTable({
-      validate(need(reactive_top_ten_questions_2023()[[1]], ""))
+      validate(need(reactive_top_ten_questions()[[1]], ""))
       datatable(
-        reactive_top_ten_questions_2023()[[2]],
+        reactive_top_ten_questions()[[2]],
         rownames = FALSE,
-        filter   = list(position = "top"),#"top",
+        filter   = list(position = "top"),
         options  = list(
           dom      = "ltipr",
           language = list(

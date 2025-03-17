@@ -157,7 +157,7 @@ proceso_firma_sello1_UI <- function(id) {
   )
 }
 
-proceso_firma_sello1_Server <- function(id) {
+proceso_firma_sello1_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
     # Database on questionnaires with status "firma y sello(1)"
