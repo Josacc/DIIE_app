@@ -25,7 +25,7 @@ top_ten_UI <- function(id) {
           column(
             width = 6,
             selectInput(
-              NS(id, "id_top_ten_question_2023"),
+              NS(id, "id_top_ten_question"),
               label   = "Censo",
               choices = levels(DIIE_dates[[1]])
             )
@@ -34,7 +34,7 @@ top_ten_UI <- function(id) {
             width = 6,
             do.call(
               tabsetPanel,
-              c(list(id = NS(id, "id_modulo_select_2023"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
+              c(list(id = NS(id, "id_modulo_select"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
             )
           )
         )
@@ -44,11 +44,11 @@ top_ten_UI <- function(id) {
         fluidRow(
           column(
             width = 5,
-            plotlyOutput(NS(id, "plot_top_ten_questions_2023"))
+            plotlyOutput(NS(id, "plot_top_ten_questions"))
           ),
           column(
             width = 7,
-            dataTableOutput(NS(id, "table_top_ten_questions_2023"))
+            dataTableOutput(NS(id, "table_top_ten_questions"))
           )
         ),
         br(), br(), br()
@@ -60,12 +60,12 @@ top_ten_UI <- function(id) {
 top_ten_Server <- function(id, data) { # add 'data' argument
   moduleServer(id, function(input, output, session) {
 
-    observeEvent(input$id_top_ten_question_2023, {
-      updateTabsetPanel(session, "id_modulo_select_2023", selected = input$id_top_ten_question_2023)
+    observeEvent(input$id_top_ten_question, {
+      updateTabsetPanel(session, "id_modulo_select", selected = input$id_top_ten_question)
     })
 
     reactive_top_ten_questions_2023 <- reactive({
-      switch(input$id_top_ten_question_2023,
+      switch(input$id_top_ten_question,
              CNGE   = switch(input$id_CNGE,
                              `Módulo 1` = top_ten_questions(data()[[2]], "CNGE", "M1"),
                              `Módulo 2` = top_ten_questions(data()[[2]], "CNGE", "M2"),
@@ -113,12 +113,12 @@ top_ten_Server <- function(id, data) { # add 'data' argument
       )
     })
 
-    output$plot_top_ten_questions_2023 <- renderPlotly({
+    output$plot_top_ten_questions <- renderPlotly({
       validate(need(reactive_top_ten_questions_2023()[[1]], "Sin observaciones"))
       reactive_top_ten_questions_2023()[[1]]
     })
 
-    output$table_top_ten_questions_2023 <- renderDataTable({
+    output$table_top_ten_questions <- renderDataTable({
       validate(need(reactive_top_ten_questions_2023()[[1]], ""))
       datatable(
         reactive_top_ten_questions_2023()[[2]],
