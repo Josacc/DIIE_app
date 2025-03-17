@@ -28,16 +28,14 @@ upload_file_UI <- function(id) {
           style   = "jelly"
         )
       )
-    )#,
-    # dataTableOutput(NS(id, 'table_out'))
-
+    )
   )
 }
 
 upload_file_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
-    reactive({
+    data <- reactive({
       req(input$file_upload)
       ext <- file_ext(input$file_upload$datapath)
       feedbackDanger("file_upload", ext != "xlsx", "Extensión desconocida")
@@ -70,67 +68,70 @@ upload_file_Server <- function(id) {
                              type = "message", duration = NULL)
       on.exit(removeNotification(id), add = TRUE)
 
-      database_2023     <- data_and_update(input$file_upload$datapath)[[1]]
-      update_2023       <- data_and_update(input$file_upload$datapath)[[2]]
-      database_obs_2023 <- team_data(reviewer_team, database_2023) %>%
+      database     <- data_and_update(input$file_upload$datapath)[[1]]
+      update       <- data_and_update(input$file_upload$datapath)[[2]]
+      database_obs <- team_data(reviewer_team, database) %>%
         filter(`Cantidad de obs` > 0)
 
-      return(list(database_2023, database_obs_2023, update_2023))
+      return(list(database, database_obs, update))
     })
 
-    # observeEvent(input$info_button_file_upload, {
-    #   show_alert(
-    #     session = session,
-    #     title   = "",
-    #     text    = tags$div(
-    #       tags$h3("Información",
-    #               style = "color: #0076C8; font-weight: bold; text-align: center"),
-    #       tags$br(), tags$br(),
-    #       tags$h4('Recuerda cargar el historial de seguimiento en formato “xlsx”',
-    #               style = "font-weight: bold; text-align: center"),
-    #       tags$br(),
-    #       style = "text-align: justify;
-    #     margin-left:  auto;
-    #     margin-right: auto;",
-    #       'El reporte',
-    #       tags$b('Historial de seguimiento', style = "color: #0076C8"),
-    #       'lo puedes descargar desde la página de IKTAN siguiendo estos pasos:',
-    #       tags$br(), tags$br(),
-    #       tags$ol(
-    #         tags$li('Ingresa tus credenciales.'),
-    #         tags$li('Selecciona tu perfil de acceso.'),
-    #         tags$li('Selecciona la ventana “Reportes”.'),
-    #         tags$br(),
-    #         tags$img(src = "ventana_reportes.png" ,
-    #                  `style` = "display: block;
-    #                                                          margin-left: auto;
-    #                                                          margin-right: auto;
-    #                                                          width: 25%;"
-    #         ),
-    #         tags$br(),
-    #         tags$li('Selecciona el recuadro “Reporte”.'),
-    #         tags$li('Elige el formato “XLSX”.'),
-    #         tags$li('Elige la opción “Historial de seguimiento”.'),
-    #         tags$li('Presiona el botón aceptar.'),
-    #         tags$li('Da clic en el archivo generado para descargarlo.'),
-    #         tags$br(),
-    #         tags$img(src = "select_reportes.png" ,
-    #                  `style` = "display: block;
-    #                                                          margin-left:  -4.3rem;
-    #                                                          margin-right: auto;
-    #                                                          width: 105%;"
-    #         ),
-    #         tags$br(),
-    #         tags$li('En tu explorador de archivos localiza dónde se descargó
-    #     la carpeta comprimida del reporte de seguimiento, generalmente
-    #     la podrás encontrar en la carpeta de descargas.'),
-    #         tags$li('Extrae el archivo de la carpeta comprimida.'),
-    #         tags$li('¡Listo! Ya tienes el archivo que debes cargar en la aplicación.')
-    #       )
-    #     ),
-    #     html  = TRUE,
-    #     width = "55%"
-    #   )
-    # })
+    # Info upload "Historial de seguimiento con extensión 'xlsx'".
+    observeEvent(input$info_button_file_upload, {
+      show_alert(
+        session = session,
+        title   = "",
+        text    = tags$div(
+          tags$h3("Información",
+                  style = "color: #0076C8; font-weight: bold; text-align: center"),
+          tags$br(), tags$br(),
+          tags$h4('Recuerda cargar el historial de seguimiento en formato “xlsx”',
+                  style = "font-weight: bold; text-align: center"),
+          tags$br(),
+          style = "text-align: justify;
+        margin-left:  auto;
+        margin-right: auto;",
+          'El reporte',
+          tags$b('Historial de seguimiento', style = "color: #0076C8"),
+          'lo puedes descargar desde la página de IKTAN siguiendo estos pasos:',
+          tags$br(), tags$br(),
+          tags$ol(
+            tags$li('Ingresa tus credenciales.'),
+            tags$li('Selecciona tu perfil de acceso.'),
+            tags$li('Selecciona la ventana “Reportes”.'),
+            tags$br(),
+            tags$img(src = "ventana_reportes.png" ,
+                     `style` = "display: block;
+                                                             margin-left: auto;
+                                                             margin-right: auto;
+                                                             width: 25%;"
+            ),
+            tags$br(),
+            tags$li('Selecciona el recuadro “Reporte”.'),
+            tags$li('Elige el formato “XLSX”.'),
+            tags$li('Elige la opción “Historial de seguimiento”.'),
+            tags$li('Presiona el botón aceptar.'),
+            tags$li('Da clic en el archivo generado para descargarlo.'),
+            tags$br(),
+            tags$img(src = "select_reportes.png" ,
+                     `style` = "display: block;
+                                                             margin-left:  -4.3rem;
+                                                             margin-right: auto;
+                                                             width: 105%;"
+            ),
+            tags$br(),
+            tags$li('En tu explorador de archivos localiza dónde se descargó
+        la carpeta comprimida del reporte de seguimiento, generalmente
+        la podrás encontrar en la carpeta de descargas.'),
+            tags$li('Extrae el archivo de la carpeta comprimida.'),
+            tags$li('¡Listo! Ya tienes el archivo que debes cargar en la aplicación.')
+          )
+        ),
+        html  = TRUE,
+        width = "55%"
+      )
+    })
+
+    return(data)
   })
 }
