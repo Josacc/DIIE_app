@@ -14,7 +14,6 @@ library(shinythemes)
 
 
 source('contact/contact.R')
-source('modules/actualizacion.R')
 source('modules/CNGAE_current_year.R')
 
 secure_app(
@@ -42,53 +41,54 @@ secure_app(
     )
   ),
   lan = use_language("es"),
-dashboardPage(
+  dashboardPage(
 
-# dashboard Header --------------------------------------------------------
 
-  dashboardHeader(
-    title="DIIE app",
-    titleWidth = 130,
-    tags$li(
-      class = "dropdown",
-      style = "display: flex; align-items: center; height: 50px;",
-      actionBttn("page_full", style = "stretch", icon("maximize"))
+# Header --------------------------------------------------------
+
+    dashboardHeader(
+      title="DIIE app",
+      titleWidth = 130,
+      tags$li(
+        class = "dropdown",
+        style = "display: flex; align-items: center; height: 50px;",
+        actionBttn("page_full", style = "stretch", icon("maximize"))
+      ),
+      dropdownMenu(
+        type        = "messages",
+        badgeStatus = NULL,
+        headerText  = "Dudas o sugerencias",
+        messageItem(
+          from    = contact_name,
+          message = contact_email,
+          icon    = icon("user-gear"),
+          href    = str_c("mailto:", contact_email, "?Subject=DIIE%20app")
+        )
+      )
     ),
-    dropdownMenu(
-      type        = "messages",
-      badgeStatus = NULL,
-      headerText  = "Dudas o sugerencias",
-      messageItem(
-        from    = contact_name,
-        message = contact_email,
-        icon    = icon("user-gear"),
-        href    = str_c("mailto:", contact_email, "?Subject=DIIE%20app")
+
+
+# Sidebar -------------------------------------------------------
+
+    dashboardSidebar(
+      width = 150,
+      HTML(str_c("<br><br><br><br><br><br><br>")),
+      sidebarMenu(
+        menuItem(
+          "Analítica",
+          tabName = "analysis",
+          icon = icon("chart-simple"),
+          menuItem("CNGAE 2024", tabName = "CNGAE_analysis") # (update every year!)
+        )
       )
-    )
-  ),
+    ),
 
 
-# dashboard Sidebar -------------------------------------------------------
+# Body ----------------------------------------------------------
 
-  dashboardSidebar(
-    width = 150,
-    HTML(str_c("<br><br><br><br><br><br><br>")),
-    sidebarMenu(
-      menuItem(
-        "Analítica",
-        tabName = "analysis",
-        icon = icon("chart-simple"),
-        menuItem("CNGAE 2024", tabName = "CNGAE_analysis") # (update every year!)
-      )
-    )
-  ), # End dashboardSidebar
-
-
-# Dashboard Body ----------------------------------------------------------
-
-  dashboardBody(
-    tags$head(tags$style(HTML("
-      .content-wrapper {
+    dashboardBody(
+      tags$head(tags$style(HTML(
+        ".content-wrapper {
         background-color: #FFFFFF;
       }
       .btn_custom_interno_1 {
@@ -98,49 +98,13 @@ dashboardPage(
       .btn_custom_interno_2 {
         background-color: navy;
         color: white;
-      }
-    "
-    ))),
-    fullscreen_all(click_id = "page_full"),
-
-
-# Analítica ----------------------------------------------------------
-
-    tabItems(
-      CNGAE_current_year_UI('id_CNGAE_current_year')
-
-
-# # Interno -----------------------------------------------------------------
-#
-#           tabPanel(
-#             "Interno",
-#             icon = icon("square-poll-vertical"),
-#             div(
-#               class = "pull-right",
-#               logoutUI(
-#                 id = "logout",
-#                 label = "",
-#                 icon = icon("sign-out-alt")
-#               )
-#             ),
-#             loginUI(
-#               id = "login",
-#               title = "",
-#               user_title = "Usuario",
-#               pass_title = "Contraseña",
-#               login_title = "Iniciar sesión",
-#               error_message = "¡Usuario o contraseña no válidos!",
-#             ),
-#             uiOutput("diie_interno")
-#           ),
-#
-#
-# # Actualización -----------------------------------------------------------
-#
-#           actualizacion_UI("id_module_actualizacion")
-#         )
-#       )
+      }"
+      ))),
+      fullscreen_all(click_id = "page_full"),
+      # Analítica
+      tabItems(
+        CNGAE_current_year_UI('id_CNGAE_current_year')
+      )
     )
-  ) # End dashboardBody
-)# End dashboardPage
+  )
 )

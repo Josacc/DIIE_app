@@ -5,6 +5,7 @@ source('modules/CNGAE_current_year/module_upload_file.R')
 source('modules/CNGAE_current_year/module_top_ten.R')
 source('modules/CNGAE_current_year/module_revision_oc.R')
 source('modules/CNGAE_current_year/module_proceso_firma_sello1.R')
+source('modules/CNGAE_current_year/module_interno.R')
 source('modules/CNGAE_current_year/module_actualizacion.R')
 
 CNGAE_current_year_UI <- function(id) {
@@ -33,36 +34,12 @@ CNGAE_current_year_UI <- function(id) {
         # 'revisión oc' module
         revision_oc_UI(NS(id, 'id_revision_oc')),
         # 'en proceso de firma y sello (1)' module
-        proceso_firma_sello1_UI(NS(id, 'id_proceso_firma_sello1')),
-        # Actualización
-        actualizacion_UI(NS(id, 'id_module_actualizacion'))
-      )
-
-# Interno -----------------------------------------------------------------
-
-      # tabPanel(
-      #   "Interno",
-      #   icon = icon("square-poll-vertical"),
-      #   div(
-      #     class = "pull-right",
-      #     logoutUI(
-      #       id = "logout",
-      #       label = "",
-      #       icon = icon("sign-out-alt")
-      #     )
-      #   ),
-      #   loginUI(
-      #     id = "login",
-      #     title = "",
-      #     user_title = "Usuario",
-      #     pass_title = "Contraseña",
-      #     login_title = "Iniciar sesión",
-      #     error_message = "¡Usuario o contraseña no válidos!",
-      #   ),
-      #   uiOutput("diie_interno")
-      # ),
-
-
+        proceso_firma_sello1_UI(NS(id, 'id_proceso_firma_sello1'))
+      ),
+      # Interno
+      interno_UI(NS(id, 'id_module_interno')),
+      # Actualización
+      actualizacion_UI(NS(id, 'id_module_actualizacion'))
     )
   )
 }
@@ -86,7 +63,9 @@ CNGAE_current_year_Server <- function(id) {
       showTab(inputId = "id_navbar_current_year", target = "Interno")
     })
 
+    # info
     info_analitica_Server('id_info_analitica')
+    # upload file
     data <- upload_file_Server('id_upload_file')
     # observaciones
     top_ten_Server('id_top_ten', data)
@@ -94,9 +73,9 @@ CNGAE_current_year_Server <- function(id) {
     revision_oc_Server('id_revision_oc', data)
     # en proceso de firma y sello (1)
     proceso_firma_sello1_Server('id_proceso_firma_sello1', data)
+    # interno
+    interno_Server('id_module_interno', data)
     # actualización
     actualizacion_Server("id_module_actualizacion", data)
-
-
   })
 }
