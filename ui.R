@@ -14,7 +14,8 @@ library(shinythemes)
 
 
 source('contact/contact.R')
-source('modules/CNGAE_current_year.R')
+source('modules/CNGAE_2024.R')
+source('modules/CNGAE_2025.R')
 
 secure_app(
   theme    = shinytheme("flatly"),
@@ -48,7 +49,7 @@ secure_app(
 
     dashboardHeader(
       title="DIIE app",
-      titleWidth = 130,
+      titleWidth = 150,
       tags$li(
         class = "dropdown",
         style = "display: flex; align-items: center; height: 50px;",
@@ -78,7 +79,8 @@ secure_app(
           "Analítica",
           tabName = "analysis",
           icon = icon("chart-simple"),
-          menuItem("CNGAE 2024", tabName = "CNGAE_analysis") # (update every year!)
+          menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024"),
+          menuItem("CNGAE 2025", tabName = "CNGAE_analytics_2025")
         )
       )
     ),
@@ -103,7 +105,8 @@ secure_app(
       fullscreen_all(click_id = "page_full"),
       # Analítica
       tabItems(
-        CNGAE_current_year_UI('id_CNGAE_current_year')
+        CNGAE_2024_UI('id_CNGAE_2024'),
+        CNGAE_2025_UI('id_CNGAE_2025')
       )
     )
   )

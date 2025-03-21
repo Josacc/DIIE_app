@@ -24,6 +24,7 @@ function(input, output, session) {
   )
 
   # CNGAE 2024
-  CNGAE_current_year_Server('id_CNGAE_current_year')
+  CNGAE_2024_Server('id_CNGAE_2024')
+  CNGAE_2025_Server('id_CNGAE_2025')
 
 }
