@@ -2,31 +2,25 @@
 
 
 # Cargar el paquete
-library(odbc)
+
 
 # Establecer la conexión
-conexion <- dbConnect(odbc::odbc(), "01_oracle_dsn", uid = "", pwd = "")
+conexion <- dbConnect(
+  odbc::odbc(),
+  "01_oracle_dsn",
+  uid = "",
+  pwd = ""
+)
 
-# Hacer una consulta
-resultado <- dbGetQuery(conexion, "SELECT * FROM ")
 
-# Mostrar el resultado
-print(resultado)
+raw_data <- dbGetQuery(conexion, "SELECT * FROM VW_HISTORIALSEGUIMIENTO")
+raw_data <- as_tibble(raw_data)
 
-resultado <- sqlQuery(conexion, "SELECT 1")
-print(resultado)
 
 
 
 # Cerrar la conexión
 dbDisconnect(conexion)
-
-
-
-
-
-
-
 
 
 # read_file_UI <- function(id) {
@@ -37,7 +31,7 @@ dbDisconnect(conexion)
 #   moduleServer(id, function(input, output, session) {
 #
 #     data <- reactive({
-#       data_path <- 'historial_seguimiento/xIktan_20241024044202298_reporteSegumiento.xlsx'
+#       data_path <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
 #       ext <- file_ext(data_path)
 #
 #       if (!identical(ext, "xlsx")) {

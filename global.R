@@ -9,6 +9,8 @@ library(readxl)
 library(shiny)
 library(shinymanager)
 library(DT)
+library(odbc)
+library(DBI)
 
 
 # Settings for shinyapss.io and Shiny Server

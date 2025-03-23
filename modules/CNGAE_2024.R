@@ -44,7 +44,7 @@ CNGAE_2024_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
     data <- reactive({
-      data_path <- 'historial_seguimiento/xIktan_20241024044202298_reporteSegumiento.xlsx'
+      data_path <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
       raw_data  <- data_and_update(data_path)
       database     <- raw_data[[1]]
       update       <- raw_data[[2]]
