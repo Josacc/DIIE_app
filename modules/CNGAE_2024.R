@@ -6,6 +6,7 @@ source('modules/CNGAE_2024/module_revision_oc.R')
 source('modules/CNGAE_2024/module_proceso_firma_sello1.R')
 source('modules/CNGAE_2024/module_interno.R')
 source('modules/CNGAE_2024/module_actualizacion.R')
+source("data/data_2024_year.R")
 
 CNGAE_2024_UI <- function(id) {
   tabItem(
@@ -66,5 +67,6 @@ CNGAE_2024_Server <- function(id) {
     interno_Server('id_module_interno', data)
     # actualización
     actualizacion_Server("id_module_actualizacion", data)
+
   })
 }

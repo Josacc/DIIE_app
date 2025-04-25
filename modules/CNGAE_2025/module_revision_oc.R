@@ -7,6 +7,28 @@ revision_oc_UI <- function(id) {
     tabsetPanel(
       type = "pills",
       tabPanel(
+        "Cuestionarios enviados a revisión OC por entidad",
+        br(),
+        sidebarLayout(
+          sidebarPanel(
+            width = 3,
+            selectInput(
+              NS(id, "id_questionnaires_vs_entities"),
+              "Entidad",
+              choices = c("NACIONAL", levels(entities[[1]]))
+            )
+          ),
+          mainPanel(
+            width = 12,
+            plotlyOutput(
+              NS(id, "plot_arrival_questionnaires_entitie"),
+              height = "700px"
+            )
+          )
+        ),
+        br()
+      ),
+      tabPanel(
         "Cuestionarios enviados a revisión OC",
         br(),
         sidebarLayout(
@@ -35,75 +57,54 @@ revision_oc_UI <- function(id) {
           )
         ),
         br()
-      ),
-      tabPanel(
-        "Comparativo global 2023 vs 2024",
-        br(),
-        sidebarLayout(
-          sidebarPanel(
-            width = 12,
-            sliderInput(
-              NS(id, "id_slider_date_questionnaires_weeks"),
-              label = "Línea de tiempo por semana",
-              min   = 1,
-              max   = 30,
-              value = 1,
-              step  = 1,
-              animate = TRUE
-            ),
-            p(strong("Año 2024, cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires_weeks"), inline = TRUE)),
-              style = "color: #3c8dbc"
-            ),
-            p(strong("Año 2023, cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires_weeks_previous_year"), inline = TRUE)),
-              style = "color: #5fa4cc"
-            )
-          ),
-          mainPanel(
-            style = "height: 400px",
-            width = 12,
-            fluidRow(
-              column(
-                width = 6,
-                plotlyOutput(
-                  NS(id, "plot_arrival_questionnaires_weeks"),
-                  height = "400px"
-                )
-              ),
-              column(
-                width = 6,
-                plotlyOutput(
-                  NS(id, "plot_arrival_questionnaires_weeks_previous_year"),
-                  height = "400px"
-                )
-              )
-            )
-          )
-        ),
-        br()
-      ),
-      tabPanel(
-        "Cuestionarios enviados a revisión OC por entidad",
-        br(),
-        sidebarLayout(
-          sidebarPanel(
-            width = 3,
-            selectInput(
-              NS(id, "id_questionnaires_vs_entities"),
-              "Entidad",
-              choices = c("NACIONAL", levels(entities[[1]]))
-            )
-          ),
-          mainPanel(
-            width = 12,
-            plotlyOutput(
-              NS(id, "plot_arrival_questionnaires_entitie"),
-              height = "700px"
-            )
-          )
-        )
-      )
+      )#,
+      # tabPanel(
+      #   "Comparativo global 2023 vs 2024",
+      #   br(),
+      #   sidebarLayout(
+      #     sidebarPanel(
+      #       width = 12,
+      #       sliderInput(
+      #         NS(id, "id_slider_date_questionnaires_weeks"),
+      #         label = "Línea de tiempo por semana",
+      #         min   = 1,
+      #         max   = 30,
+      #         value = 1,
+      #         step  = 1,
+      #         animate = TRUE
+      #       ),
+      #       p(strong("Año 2024, cantidad de cuestionarios enviados a revisión OC por semana: "),
+      #         strong(textOutput(NS(id, "text_count_questionnaires_weeks"), inline = TRUE)),
+      #         style = "color: #3c8dbc"
+      #       ),
+      #       p(strong("Año 2023, cantidad de cuestionarios enviados a revisión OC por semana: "),
+      #         strong(textOutput(NS(id, "text_count_questionnaires_weeks_previous_year"), inline = TRUE)),
+      #         style = "color: #5fa4cc"
+      #       )
+      #     ),
+      #     mainPanel(
+      #       style = "height: 400px",
+      #       width = 12,
+      #       fluidRow(
+      #         column(
+      #           width = 6,
+      #           plotlyOutput(
+      #             NS(id, "plot_arrival_questionnaires_weeks"),
+      #             height = "400px"
+      #           )
+      #         ),
+      #         column(
+      #           width = 6,
+      #           plotlyOutput(
+      #             NS(id, "plot_arrival_questionnaires_weeks_previous_year"),
+      #             height = "400px"
+      #           )
+      #         )
+      #       )
+      #     )
+      #   ),
+      #   br()
+      # )
     )
   )
 }

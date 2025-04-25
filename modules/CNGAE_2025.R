@@ -6,6 +6,7 @@ source('modules/CNGAE_2025/module_revision_oc.R')
 source('modules/CNGAE_2025/module_proceso_firma_sello1.R')
 source('modules/CNGAE_2025/module_interno.R')
 source('modules/CNGAE_2025/module_actualizacion.R')
+source("data/data_2025_year.R")
 
 CNGAE_2025_UI <- function(id) {
   tabItem(
@@ -44,7 +45,7 @@ CNGAE_2025_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
     data <- reactive({
-      data_path <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
+      data_path <- 'historial_seguimiento/xIktan_20250425020837567_reporteSegumiento.xlsx'
       raw_data  <- data_and_update(data_path)
       database     <- raw_data[[1]]
       update       <- raw_data[[2]]
@@ -67,4 +68,5 @@ CNGAE_2025_Server <- function(id) {
     # actualización
     actualizacion_Server("id_module_actualizacion", data)
   })
+
 }

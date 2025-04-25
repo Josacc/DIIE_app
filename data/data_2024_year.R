@@ -1,4 +1,3 @@
-
 # Default databases -------------------------------------------------------
 
 source("data/reviewer_team.R")

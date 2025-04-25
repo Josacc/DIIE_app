@@ -81,8 +81,8 @@ secure_app(
           "Analítica",
           tabName = "analysis",
           icon = icon("chart-simple"),
-          menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024"),
           menuItem("CNGAE 2025", tabName = "CNGAE_analytics_2025")
+          # menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024")
         )
       )
     ),

@@ -6,6 +6,28 @@ proceso_firma_sello1_UI <- function(id) {
     tabsetPanel(
       type = "pills",
       tabPanel(
+        "Cuestionarios en proceso de firma y sello (1) por entidad",
+        br(),
+        sidebarLayout(
+          sidebarPanel(
+            width = 3,
+            selectInput(
+              NS(id, "id_questionnaires_firma_sello_entity"),
+              "Entidad",
+              choices = c("NACIONAL", levels(entities[[1]]))
+            )
+          ),
+          mainPanel(
+            width = 12,
+            plotlyOutput(
+              NS(id, "plot_questionnaires_firma_sello_entity"),
+              height = "700px"
+            )
+          )
+        ),
+        br()
+      ),
+      tabPanel(
         "Cuestionarios en proceso de firma y sello (1)",
         br(),
         sidebarLayout(
@@ -131,27 +153,6 @@ proceso_firma_sello1_UI <- function(id) {
           )
         ),
         br(),
-      ),
-      tabPanel(
-        "Cuestionarios en proceso de firma y sello (1) por entidad",
-        br(),
-        sidebarLayout(
-          sidebarPanel(
-            width = 3,
-            selectInput(
-              NS(id, "id_questionnaires_firma_sello_entity"),
-              "Entidad",
-              choices = c("NACIONAL", levels(entities[[1]]))
-            )
-          ),
-          mainPanel(
-            width = 12,
-            plotlyOutput(
-              NS(id, "plot_questionnaires_firma_sello_entity"),
-              height = "700px"
-            )
-          )
-        )
       )
     )
   )

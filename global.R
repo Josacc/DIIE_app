@@ -25,6 +25,17 @@ Sys.setlocale(locale = "es_MX.utf8")
 # USER BASES ---------------------------------------------------------------
 
 source("user_base/application_user_base.R")
+source("user_base/DIIE_user_base.R")
+# Databases for year
+source("data/data_2025_year.R")
+# source("data/data_2024_year.R")
+source("functions/data_and_update.R")
+# Plot function top ten questions by project and module
+source("functions/top_ten_questions.R")
+# Entities vs observations
+source("functions/entities_vs_observations.R")
+# EDA about questionnaires "Aclaración de información OC"
+source("functions/db_q_aclaracion_oc.R")
 
 set_labels(
   language              = "es",
@@ -34,15 +45,7 @@ set_labels(
   "Login"               = "Ingresar"
 )
 
-source("user_base/DIIE_user_base.R")
-
-
 # IMPORT AND TIDY ----------------------------------------------------
-
-# Databases current year
-source("data/data_current_year.R")
-source("functions/data_and_update.R")
-
 
 # Local analysis.
 # suppressMessages(suppressWarnings({
@@ -67,13 +70,6 @@ team_data <- function(team, data) {
 # Local analysis
 # database_obs_2023 <- team_data(reviewer_team, database_2023) %>%
 #   filter(`Cantidad de obs` > 0)
-
-# Plot function top ten questions by project and module
-source("functions/top_ten_questions.R")
-
-# Entities vs observations
-source("functions/entities_vs_observations.R")
-
 
 # Data about previous year -------------------------------------------------
 
@@ -603,9 +599,3 @@ count_questionnaires_firma_sello <- function(data, .census, .min = pull(DIIE_dat
 
   return(data %>% filter(Censo == .census) %>% nrow())
 }
-
-
-# EDA about questionnaires "Aclaración de información OC" -----------------
-
-source("functions/db_q_aclaracion_oc.R")
-

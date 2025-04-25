@@ -1,4 +1,4 @@
-# Data table functión on "q_aclaracion_oc_filter"
+# Data table function on "q_aclaracion_oc_filter"
 
 datatable_q_aclaracion_oc_filter <- function(database) {
 
