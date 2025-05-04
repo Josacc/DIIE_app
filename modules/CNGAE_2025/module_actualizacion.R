@@ -2,24 +2,24 @@
 
 # module UI
 actualizacion_UI <- function(id) {
+  ns <- NS(id)
   tabPanel(
     title = strong(
-      textOutput(NS(id, "update")),
+      textOutput(ns('update')),
       style = "color: #3c8dbc; font-size: 12px;"
     ),
     h4(strong("Historial de seguimiento")),
     br(),
-    DTOutput(NS(id, "database_original")),
+    DTOutput(ns('database_original')),
     br(), br(), br(), br()
   )
 }
 
 # module server
 actualizacion_Server <- function(id, data) {
-  stopifnot(is.reactive(data))
+  # stopifnot(is.reactive(data()))  # check this line!!
   moduleServer(id, function(input, output, session) {
     output$update <- renderText({
-      req(data())
       str_c("Actualización ", (data())[[3]])
     })
 

@@ -1,34 +1,36 @@
 # 'interno' module --------------------------------------------------------
 
 interno_UI <- function(id) {
+  ns <- NS(id)
   tabPanel(
     "Interno",
     icon = icon("square-poll-vertical"),
     div(
       class = "pull-right",
       logoutUI(
-        id    = NS(id, "logout"),
+        id    = ns("logout"),
         label = "",
         icon  = icon("sign-out-alt")
       )
     ),
     loginUI(
-      id            = NS(id, "login"),
+      id            = ns("login"),
       title         = "",
       user_title    = "Usuario",
       pass_title    = "Contraseña",
       login_title   = "Iniciar sesión",
       error_message = "¡Usuario o contraseña no válidos!",
     ),
-    uiOutput(NS(id, "diie_interno"))
+    uiOutput(ns("diie_interno"))
   )
 }
 
-interno_Server <- function(id, data) { # probles into server
+interno_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
     credentials <- loginServer(
-      id       = "login",
+      id       = 'login',
       data     = DIIE_user_base,
       user_col = user,
       pwd_col  = password,
@@ -36,7 +38,7 @@ interno_Server <- function(id, data) { # probles into server
     )
 
     logout_init <- logoutServer(
-      id     = "logout",
+      id     = 'logout',
       active = reactive(credentials()$user_auth)
     )
 
@@ -54,20 +56,20 @@ interno_Server <- function(id, data) { # probles into server
           p(strong("NA: "), "cuestionario no aplica"),
           p(strong("NR: "), "cuestionario no revisado"),
           br(),
-          DTOutput("table_q_aclaracion_oc"),
+          DTOutput(ns("table_q_aclaracion_oc")),
           br(),
-          strong(textOutput(NS(id, "id_celdas_seleccionadas"))),
+          strong(textOutput(ns("id_celdas_seleccionadas"))),
           fluidRow(
             column(
               width = 12,
               actionButton(
-                NS(id, "id_bttn_clear_selection"),
+                ns("id_bttn_clear_selection"),
                 label = "Limpiar selección",
                 icon  = icon("broom"),
                 class = "btn_custom_interno_1"
               ),
               actionButton(
-                NS(id, "id_bttn_filter_obs"),
+                ns("id_bttn_filter_obs"),
                 label = "Filtrar",
                 icon  = icon("filter"),
                 class = "btn_custom_interno_2"
@@ -75,7 +77,7 @@ interno_Server <- function(id, data) { # probles into server
             )
           ),
           br(), br(), br(),
-          DTOutput(NS(id, "data_q_aclaracion_oc")),
+          DTOutput(ns("data_q_aclaracion_oc")),
           br(), br(), br(), br()
         ),
         tabPanel(
@@ -85,7 +87,7 @@ interno_Server <- function(id, data) { # probles into server
             sidebarPanel(
               width = 2,
               radioButtons(
-                NS(id, "id_obs_vs_census_2023"),
+                ns("id_obs_vs_census_2023"),
                 "Nivel de análisis",
                 choices = c("GLOBAL", levels(DIIE_dates[[1]]))
               )
@@ -94,14 +96,14 @@ interno_Server <- function(id, data) { # probles into server
               style = "height: 500px",
               width = 10,
               actionBttn(
-                inputId = NS(id, "info_button_obs_enviadas_OC"),
+                inputId = ns("info_button_obs_enviadas_OC"),
                 label   = "",
                 icon    = icon("info-circle"),
                 style   = "jelly"
               ),
               br(), br(),
               plotlyOutput(
-                NS(id, "plot_obs_vs_census_2023")
+                ns("plot_obs_vs_census_2023")
               )
             )
           )
@@ -179,7 +181,6 @@ interno_Server <- function(id, data) { # probles into server
 
     output$data_q_aclaracion_oc = renderDT({
       req(credentials()$user_auth)
-
       db_q_aclaracion_oc_filter(
         db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$data,
         db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$table,

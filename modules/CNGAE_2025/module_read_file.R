@@ -1,27 +1,17 @@
 # 'read file' module ------------------------------------------------------
 
-
-# Cargar el paquete
-
-
 # Establecer la conexión
-conexion <- dbConnect(
-  odbc::odbc(),
-  "01_oracle_dsn",
-  uid = "",
-  pwd = ""
-)
-
-
-raw_data <- dbGetQuery(conexion, "SELECT * FROM VW_HISTORIALSEGUIMIENTO")
-raw_data <- as_tibble(raw_data)
-
-
-
-
+# conexion <- dbConnect(
+#   odbc::odbc(),
+#   "01_oracle_dsn",
+#   uid = "",
+#   pwd = ""
+# )
+#
+# raw_data <- dbGetQuery(conexion, "SELECT * FROM VW_HISTORIALSEGUIMIENTO")
+# raw_data <- as_tibble(raw_data)
 # Cerrar la conexión
-dbDisconnect(conexion)
-
+# dbDisconnect(conexion)
 
 # read_file_UI <- function(id) {
 #

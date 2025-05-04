@@ -1,11 +1,11 @@
 # 'top ten' module ----------------------------------------------------
 
 tm_tabPanels <- function(id, censo_name) {
-
+  ns <- NS(id)
   tabPanel(
     title = censo_name,
     selectInput(
-      inputId = NS(id, str_c("id_", censo_name)),
+      inputId = ns(str_c("id_", censo_name)),
       label   = "Módulo",
       choices = str_c("Módulo ", seq(module_count[module_count$Censo == censo_name, ][[2]]))
     )
@@ -13,6 +13,7 @@ tm_tabPanels <- function(id, censo_name) {
 }
 
 top_ten_UI <- function(id) {
+  ns <- NS(id)
   tabPanel(
     "Top 10",
     h4(
@@ -25,7 +26,7 @@ top_ten_UI <- function(id) {
           column(
             width = 6,
             selectInput(
-              NS(id, "id_top_ten_question"),
+              ns("id_top_ten_question"),
               label   = "Censo",
               choices = levels(DIIE_dates[[1]])
             )
@@ -34,7 +35,7 @@ top_ten_UI <- function(id) {
             width = 6,
             do.call(
               tabsetPanel,
-              c(list(id = NS(id, "id_modulo_select"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
+              c(list(id = ns("id_modulo_select"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
             )
           )
         )
@@ -44,11 +45,11 @@ top_ten_UI <- function(id) {
         fluidRow(
           column(
             width = 5,
-            plotlyOutput(NS(id, "plot_top_ten_questions"))
+            plotlyOutput(ns("plot_top_ten_questions"))
           ),
           column(
             width = 7,
-            dataTableOutput(NS(id, "table_top_ten_questions"))
+            dataTableOutput(ns("table_top_ten_questions"))
           )
         ),
         br(), br(), br()

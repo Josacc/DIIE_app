@@ -1,7 +1,7 @@
 # 'upload file' module ----------------------------------------------------
 
 upload_file_UI <- function(id) {
-
+  ns <- NS(id)
   tabPanel(
     "Cargar archivo",
     icon = icon("upload"),
@@ -11,7 +11,7 @@ upload_file_UI <- function(id) {
         width = 4,
         useShinyFeedback(),
         fileInput(
-          NS(id, "file_upload"),
+          ns("file_upload"),
           'Historial de seguimiento con extensión "xlsx"',
           accept      = c(".xlsx"),
           width       = "450px",
@@ -22,7 +22,7 @@ upload_file_UI <- function(id) {
       column(
         width = 1,
         actionBttn(
-          inputId = NS(id, "info_button_file_upload"),
+          inputId = ns("info_button_file_upload"),
           label   = "",
           icon    = icon("info-circle"),
           style   = "jelly"
@@ -47,7 +47,6 @@ upload_file_Server <- function(id) {
       req(identical(ext, "xlsx"))
       pre_data <- read_xlsx(input$file_upload$datapath)
       condition <- identical(names(pre_data)[2], "INSTITUTO NACIONAL DE ESTADÍSTICA Y GEOGRAFÍA") &&
-        identical(pre_data[[3,2]],  "CNGAE 2024") &&
         identical(pre_data[[7,1]],  "Folio") &&
         identical(pre_data[[7,3]],  "Entidad") &&
         identical(pre_data[[7,5]],  "Usuario") &&

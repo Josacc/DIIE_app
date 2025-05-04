@@ -1,6 +1,7 @@
 # 'CNGAE_current_year' module ---------------------------------------------
 
 source('modules/CNGAE_2025/module_info_analitica.R')
+source('modules/CNGAE_2025/module_upload_file.R')
 source('modules/CNGAE_2025/module_top_ten.R')
 source('modules/CNGAE_2025/module_revision_oc.R')
 source('modules/CNGAE_2025/module_proceso_firma_sello1.R')
@@ -13,10 +14,13 @@ CNGAE_2025_UI <- function(id) {
     "CNGAE_analytics_2025",
     navbarPage(
       title       = "Análisis y seguimiento",
-      selected    = "Top 10",
+      id          = NS(id, 'id_navbar_current_year'),
+      selected    = 'Cargar archivo',
       collapsible = TRUE,
       # 'Info analitica' module
       info_analitica_UI(NS(id, 'id_info_analitica')),
+      # 'upload file' module
+      upload_file_UI(NS(id, 'id_upload_file')),
       # Observaciones
       navbarMenu(
         "Observaciones",
@@ -43,20 +47,11 @@ CNGAE_2025_UI <- function(id) {
 
 CNGAE_2025_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
-
-    data <- reactive({
-      data_path <- 'historial_seguimiento/xIktan_20250425020837567_reporteSegumiento.xlsx'
-      raw_data  <- data_and_update(data_path)
-      database     <- raw_data[[1]]
-      update       <- raw_data[[2]]
-      database_obs <- team_data(reviewer_team, database) %>%
-        filter(`Cantidad de obs` > 0)
-
-      return(list(database, database_obs, update))
-    })
-
     # info
     info_analitica_Server('id_info_analitica')
+    # upload file
+    # upload_file_Server('id_upload_file')
+    data <- upload_file_Server('id_upload_file')
     # observaciones
     top_ten_Server('id_top_ten', data)
     # revisión oc

@@ -1,7 +1,7 @@
 # 'revisión oc' module ----------------------------------------------------
 
 revision_oc_UI <- function(id) {
-
+  ns <- NS(id)
   tabPanel(
     "Revisión OC",
     tabsetPanel(
@@ -13,7 +13,7 @@ revision_oc_UI <- function(id) {
           sidebarPanel(
             width = 3,
             selectInput(
-              NS(id, "id_questionnaires_vs_entities"),
+              ns("id_questionnaires_vs_entities"),
               "Entidad",
               choices = c("NACIONAL", levels(entities[[1]]))
             )
@@ -21,7 +21,7 @@ revision_oc_UI <- function(id) {
           mainPanel(
             width = 12,
             plotlyOutput(
-              NS(id, "plot_arrival_questionnaires_entitie"),
+              ns("plot_arrival_questionnaires_entitie"),
               height = "700px"
             )
           )
@@ -35,7 +35,7 @@ revision_oc_UI <- function(id) {
           sidebarPanel(
             width = 12,
             sliderInput(
-              NS(id, "id_slider_date_questionnaires"),
+              ns("id_slider_date_questionnaires"),
               label = "Línea de tiempo por semana",
               min   = floor_date(DIIE_dates %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3), # CNSIPEE start CE
               max   = ceiling_date(tail(DIIE_dates$diffusion, 1), "week", week_start = 1), # last diffusion
@@ -44,14 +44,14 @@ revision_oc_UI <- function(id) {
               animate = TRUE
             ),
             p(strong("Cantidad de cuestionarios enviados a revisión OC por semana: "),
-              strong(textOutput(NS(id, "text_count_questionnaires"), inline = TRUE)),
+              strong(textOutput(ns("text_count_questionnaires"), inline = TRUE)),
               style = "color: #3c8dbc")
           ),
           mainPanel(
             style = "height: 400px",
             width = 12,
             plotlyOutput(
-              NS(id, "plot_arrival_questionnaires"),
+              ns("plot_arrival_questionnaires"),
               height = "400px"
             )
           )
@@ -65,7 +65,7 @@ revision_oc_UI <- function(id) {
       #     sidebarPanel(
       #       width = 12,
       #       sliderInput(
-      #         NS(id, "id_slider_date_questionnaires_weeks"),
+      #         ns("id_slider_date_questionnaires_weeks"),
       #         label = "Línea de tiempo por semana",
       #         min   = 1,
       #         max   = 30,
@@ -74,11 +74,11 @@ revision_oc_UI <- function(id) {
       #         animate = TRUE
       #       ),
       #       p(strong("Año 2024, cantidad de cuestionarios enviados a revisión OC por semana: "),
-      #         strong(textOutput(NS(id, "text_count_questionnaires_weeks"), inline = TRUE)),
+      #         strong(textOutput(ns("text_count_questionnaires_weeks"), inline = TRUE)),
       #         style = "color: #3c8dbc"
       #       ),
       #       p(strong("Año 2023, cantidad de cuestionarios enviados a revisión OC por semana: "),
-      #         strong(textOutput(NS(id, "text_count_questionnaires_weeks_previous_year"), inline = TRUE)),
+      #         strong(textOutput(ns("text_count_questionnaires_weeks_previous_year"), inline = TRUE)),
       #         style = "color: #5fa4cc"
       #       )
       #     ),
@@ -89,14 +89,14 @@ revision_oc_UI <- function(id) {
       #         column(
       #           width = 6,
       #           plotlyOutput(
-      #             NS(id, "plot_arrival_questionnaires_weeks"),
+      #             ns("plot_arrival_questionnaires_weeks"),
       #             height = "400px"
       #           )
       #         ),
       #         column(
       #           width = 6,
       #           plotlyOutput(
-      #             NS(id, "plot_arrival_questionnaires_weeks_previous_year"),
+      #             ns("plot_arrival_questionnaires_weeks_previous_year"),
       #             height = "400px"
       #           )
       #         )
