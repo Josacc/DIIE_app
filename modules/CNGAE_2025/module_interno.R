@@ -89,7 +89,7 @@ interno_Server <- function(id, data) {
               radioButtons(
                 ns("id_obs_vs_census_2023"),
                 "Nivel de análisis",
-                choices = c("GLOBAL", levels(DIIE_dates[[1]]))
+                choices = c("GLOBAL", levels(pull(t_census)))
               )
             ),
             mainPanel(
@@ -159,7 +159,7 @@ interno_Server <- function(id, data) {
     # Table questionnaires aclaracion oc
     output$table_q_aclaracion_oc <- renderDT({
       req(credentials()$user_auth)
-      db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$datatable
+      db_q_aclaracion_oc(data()[[1]])$datatable
     }, server = FALSE)
 
     bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
@@ -182,8 +182,8 @@ interno_Server <- function(id, data) {
     output$data_q_aclaracion_oc = renderDT({
       req(credentials()$user_auth)
       db_q_aclaracion_oc_filter(
-        db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$data,
-        db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$table,
+        db_q_aclaracion_oc(data()[[1]])$data,
+        db_q_aclaracion_oc(data()[[1]])$table,
         bttn_filter_obs()
       ) %>%
         datatable_q_aclaracion_oc_filter()

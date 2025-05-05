@@ -50,8 +50,29 @@ secure_app(
 # Header --------------------------------------------------------
 
     dashboardHeader(
-      title="DIIE app",
-      titleWidth = 150,
+      title = tags$div(
+        style = "
+        display: flex;
+        align-items: center;
+        padding-left: 17px;
+        ",
+        tags$img(
+          src    = "logo_dashboardheader.png",
+          height = "40px",
+          style  = "margin-right: 10px;"
+        ),
+        tags$span(
+          "DIIE app",
+          style = "
+          font-size: 16px;
+          font-weight: bold;
+          "
+        ),
+        tags$head(
+          tags$title("DIIE app")
+        )
+      ),
+      titleWidth = 200,
       tags$li(
         class = "dropdown",
         style = "display: flex; align-items: center; height: 50px;",
@@ -60,7 +81,7 @@ secure_app(
       dropdownMenu(
         type        = "messages",
         badgeStatus = NULL,
-        headerText  = "Dudas o sugerencias",
+        headerText  = "Administrador",
         messageItem(
           from    = contact_name,
           message = contact_email,
@@ -102,7 +123,12 @@ secure_app(
       .btn_custom_interno_2 {
         background-color: navy;
         color: white;
-      }"
+      }
+      .skin-blue .main-header .logo {
+          background-color: #3c8dbc !important;
+          color: white !important;
+        }
+        "
       ))),
       fullscreen_all(click_id = "page_full"),
       # Analítica

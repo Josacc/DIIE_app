@@ -1,5 +1,5 @@
 # "Aclaración de información OC" questionnaires database function
-db_q_aclaracion_oc <- function(database, delete_q) {
+db_q_aclaracion_oc <- function(database, delete_q = NULL) {
 
   .data <- database %>%
     filter(!(Folio %in% pull(DT_folio_no_aplica(database)))) %>%
@@ -54,7 +54,7 @@ db_q_aclaracion_oc <- function(database, delete_q) {
           list(
             extend           = "colvis",
             text             = "Visibilidad de columnas",
-            columns          = 1:34,
+            columns          = 1:42,
             collectionLayout = "fixed columns",
             popoverTitle     = "Control de visibilidad de columnas"
           )
@@ -69,7 +69,7 @@ db_q_aclaracion_oc <- function(database, delete_q) {
           )
         ),
         columnDefs    = list(
-          list(className = 'dt-center', targets = c(1:34))
+          list(className = 'dt-center', targets = c(1:42))
         ),
         initComplete  = JS(
           "function(settings, json) {",
@@ -83,16 +83,16 @@ db_q_aclaracion_oc <- function(database, delete_q) {
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:38),
+      columns         = c(2:43),
       fontWeight      = styleInterval(c(2), c("", "bold")),
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:38),
+      columns         = c(2:43),
       backgroundColor = styleInterval(c(2, 3, 4), c("", "bisque", "yellow", "red"))
     ) %>%
     formatStyle(
-      columns         = c(15, 17, 19, 24, 31, 33),
+      columns         = c(19, 21, 23, 28, 35, 37, 39, 42),
       `border-right`  = "3px solid #ddd"
     )
 
