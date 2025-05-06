@@ -106,7 +106,7 @@ DIIE_dates <- tibble(
 # Database on questionnaires (omit '1501' exclusive for CDMX, update every year!).
 questionnaires <- tibble(
   Cuestionarios = c(
-    "1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112", "1201", "1401", "1601", "1701", "1702", "1703",
+    "1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112", "1201", "1301", "1401", "1501", "1601", "1701", "1702", "1703",
     "2101", "2201",
     "3101", "3201",
     "4101", "4201", "4301", "4401", "4501",
@@ -130,7 +130,7 @@ module_count <- questionnaires %>%
 pre_id_folio <- federal_entities %>%
   transmute(id_estado = as.character(id_estado)) %>%
   pull() %>%
-  map(~str_c(., pull(questionnaires))) %>%
+  map(~str_c(., pull(questionnaires %>% filter(!Cuestionarios == '1501')))) %>%
   unlist() %>%
   tibble(Folio = .)
 

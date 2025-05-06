@@ -28,7 +28,7 @@ top_ten_UI <- function(id) {
             selectInput(
               ns("id_top_ten_question"),
               label   = "Censo",
-              choices = levels(DIIE_dates[[1]])
+              choices = levels(pull(t_census))
             )
           ),
           column(
@@ -72,7 +72,9 @@ top_ten_Server <- function(id, data) {
                              `Módulo 2` = top_ten_questions(data()[[2]], "CNGE", "M2"),
                              `Módulo 3` = top_ten_questions(data()[[2]], "CNGE", "M3"),
                              `Módulo 4` = top_ten_questions(data()[[2]], "CNGE", "M4"),
-                             `Módulo 5` = top_ten_questions(data()[[2]], "CNGE", "M5")
+                             `Módulo 5` = top_ten_questions(data()[[2]], "CNGE", "M5"),
+                             `Módulo 6` = top_ten_questions(data()[[2]], "CNGE", "M6"),
+                             `Módulo 7` = top_ten_questions(data()[[2]], "CNGE", "M7")
              ),
              CNSPE   = switch(input$id_CNSPE,
                               `Módulo 1` = top_ten_questions(data()[[2]], "CNSPE", "M1"),

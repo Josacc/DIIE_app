@@ -69,7 +69,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL) {
           )
         ),
         columnDefs    = list(
-          list(className = 'dt-center', targets = c(1:42))
+          list(className = 'dt-center', targets = c(1:43))
         ),
         initComplete  = JS(
           "function(settings, json) {",
@@ -83,16 +83,16 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL) {
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:43),
+      columns         = c(2:44),
       fontWeight      = styleInterval(c(2), c("", "bold")),
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:43),
+      columns         = c(2:44),
       backgroundColor = styleInterval(c(2, 3, 4), c("", "bisque", "yellow", "red"))
     ) %>%
     formatStyle(
-      columns         = c(19, 21, 23, 28, 35, 37, 39, 42),
+      columns         = c(20, 22, 24, 29, 36, 38, 40, 43),
       `border-right`  = "3px solid #ddd"
     )
 
