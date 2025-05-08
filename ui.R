@@ -11,8 +11,6 @@ library(shinyfullscreen)
 library(shinyauthr)
 library(shinymanager)
 library(shinythemes)
-library(odbc)
-library(DBI)
 
 
 source('contact/contact.R')

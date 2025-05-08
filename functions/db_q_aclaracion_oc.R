@@ -12,7 +12,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL) {
       )
     ) %>%
     filter(
-      !str_detect(str_extract(Observación, "[^ \\n]+"), "C\\.") | is.na(Observación)
+      !str_detect(str_extract(Observación, "[^ \\n]+"), '(C|c)(\\.{0,2}|\\s{0,2})$') | is.na(Observación)
     )
 
   database <- .data %>%
