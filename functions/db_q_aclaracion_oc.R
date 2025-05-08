@@ -49,7 +49,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL) {
         fixedHeader   = TRUE,
         dom           = "QBlftip",
         lengthMenu    = list(c(8, 16, 32), c("8", "16", "32")),
-        search        = list(regex = TRUE, search = "|"),
+        search        = list(regex = TRUE),
         buttons       = list(
           list(
             extend           = "colvis",

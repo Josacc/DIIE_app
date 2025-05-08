@@ -14,7 +14,7 @@ revision_oc_UI <- function(id) {
             width = 3,
             selectInput(
               ns("id_questionnaires_vs_entities"),
-              "Entidad",
+              "Seleccionar la entidad",
               choices = c("NACIONAL", levels(entities[[1]]))
             )
           ),

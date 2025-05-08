@@ -14,7 +14,7 @@ proceso_firma_sello1_UI <- function(id) {
             width = 3,
             selectInput(
               ns("id_questionnaires_firma_sello_entity"),
-              "Entidad",
+              "Seleccionar la entidad",
               choices = c("NACIONAL", levels(entities[[1]]))
             )
           ),
@@ -55,7 +55,7 @@ proceso_firma_sello1_UI <- function(id) {
                     "Por semana",
                     selectInput(
                       ns("id_questionnaires_firma_sello_census"),
-                      "Censo",
+                      "Seleccionar el censo",
                       choices = c("GLOBAL", levels(DIIE_dates[[1]])),
                       width = "150px"
                     ),

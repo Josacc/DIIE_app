@@ -12,7 +12,7 @@ upload_file_UI <- function(id) {
         useShinyFeedback(),
         fileInput(
           ns("file_upload"),
-          'Carga el historial de seguimiento con extensión "xlsx"',
+          'Cargar el historial de seguimiento con extensión "xlsx"',
           accept      = c(".xlsx"),
           width       = "450px",
           buttonLabel =  "Buscar",

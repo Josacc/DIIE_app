@@ -6,7 +6,7 @@ tm_tabPanels <- function(id, censo_name) {
     title = censo_name,
     selectInput(
       inputId = ns(str_c("id_", censo_name)),
-      label   = "Módulo",
+      label   = "Seleccionar el módulo",
       choices = str_c("Módulo ", seq(module_count[module_count$Censo == censo_name, ][[2]]))
     )
   )
@@ -27,7 +27,7 @@ top_ten_UI <- function(id) {
             width = 6,
             selectInput(
               ns("id_top_ten_question"),
-              label   = "Censo",
+              label   = "Seleccionar el censo",
               choices = levels(pull(t_census))
             )
           ),

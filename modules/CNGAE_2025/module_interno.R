@@ -59,20 +59,21 @@ interno_Server <- function(id, data) {
           DTOutput(ns("table_q_aclaracion_oc")),
           br(),
           strong(textOutput(ns("id_celdas_seleccionadas"))),
+          br(),
           fluidRow(
             column(
               width = 12,
+              actionButton(
+                ns("id_bttn_filter_obs"),
+                label = 'Filtrar celdas seleccionadas',
+                icon  = icon("filter"),
+                class = "btn_custom_interno_2"
+              ),
               actionButton(
                 ns("id_bttn_clear_selection"),
                 label = "Limpiar selección",
                 icon  = icon("broom"),
                 class = "btn_custom_interno_1"
-              ),
-              actionButton(
-                ns("id_bttn_filter_obs"),
-                label = "Filtrar",
-                icon  = icon("filter"),
-                class = "btn_custom_interno_2"
               )
             )
           ),
@@ -88,7 +89,7 @@ interno_Server <- function(id, data) {
               width = 2,
               radioButtons(
                 ns("id_obs_vs_census_2023"),
-                "Nivel de análisis",
+                "Seleccionar el nivel de análisis",
                 choices = c("GLOBAL", levels(pull(t_census)))
               )
             ),
