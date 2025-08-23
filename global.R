@@ -1,16 +1,6 @@
 # DIIE app
 # by Josacc
 
-library(patchwork)
-library(scales)
-library(plotly)
-library(tidyverse)
-library(readxl)
-library(shiny)
-library(shinymanager)
-library(DT)
-
-
 # Settings for shinyapss.io and Shiny Server
 options(
   encoding               = "UTF-8",

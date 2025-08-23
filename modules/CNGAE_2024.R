@@ -17,9 +17,10 @@ CNGAE_2024_UI <- function(id) {
         solidHeader = TRUE,
         width       = 12,
         tabBox(
-          id    = ns('id_navbar_analytics'),
-          title = tags$p('Análisis y seguimiento', style = 'color: #3c8dbc;'),
-          width = 12,
+          id       = ns('id_navbar_analytics'),
+          title    = tags$b('Análisis y seguimiento', style = 'color: #3c8dbc;'),
+          width    = 12,
+          selected = 'Observaciones',
           tabPanel(
             title = "Info",
             icon  = icon("info-circle"),
@@ -65,18 +66,11 @@ CNGAE_2024_Server <- function(id) {
       return(list(database, database_obs, update))
     })
 
-    # info
     info_analitica_Server('id_info_analitica')
-    # observaciones
     top_ten_Server('id_top_ten', data)
-    # revisión oc
     revision_oc_Server('id_revision_oc', data)
-    # en proceso de firma y sello (1)
     proceso_firma_sello1_Server('id_proceso_firma_sello1', data)
-    # interno
     interno_Server('id_module_interno', data)
-    # actualización
-    actualizacion_Server("id_module_actualizacion", data)
 
   })
 }

@@ -11,7 +11,9 @@ library(shinyfullscreen)
 library(shinyauthr)
 library(shinymanager)
 library(shinythemes)
-
+library(tools)
+library(patchwork)
+library(scales)
 
 source('contact/contact.R')
 source('modules/CNGAE_2024.R')
@@ -43,10 +45,6 @@ source('modules/CNGAE_2025.R')
 #   ),
   # lan = use_language("es"),
   dashboardPage(
-
-
-# Header --------------------------------------------------------
-
     dashboardHeader(
       title = tags$div(
         style = "
@@ -88,10 +86,6 @@ source('modules/CNGAE_2025.R')
         )
       )
     ),
-
-
-# Sidebar -------------------------------------------------------
-
     dashboardSidebar(
       width = 150,
       HTML(str_c("<br><br><br><br><br><br><br>")),
@@ -99,46 +93,16 @@ source('modules/CNGAE_2025.R')
         menuItem(
           "Analítica",
           tabName = "analysis",
-          icon = icon("chart-simple"),
+          icon    = icon("chart-simple"),
+          startExpanded = TRUE,
+          menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024"),
           menuItem("CNGAE 2025", tabName = "CNGAE_analytics_2025")
-          # menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024")
         )
       )
     ),
-
-
-# Body ----------------------------------------------------------
-
     dashboardBody(
-      tags$head(tags$style(HTML(
-        ".content-wrapper {
-        background-color: #FFFFFF;
-        }
-      /* Delete focus */
-      :focus {
-        outline: 0 !important;
-        box-shadow: none !important;
-      }
-      .nav-tabs-custom {
-        box-shadow: none !important;
-        border: none !important;
-      }
-      .btn_custom_interno_1 {
-        background-color: #3c8dbc;
-        color: white;
-      }
-      .btn_custom_interno_2 {
-        background-color: navy;
-        color: white;
-      }
-      .skin-blue .main-header .logo {
-          background-color: #3c8dbc !important;
-          color: white !important;
-        }
-        "
-      ))),
+      tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "style.css")),
       fullscreen_all(click_id = "page_full"),
-      # Analítica
       tabItems(
         CNGAE_2024_UI('id_CNGAE_2024'),
         CNGAE_2025_UI('id_CNGAE_2025')

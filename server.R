@@ -1,13 +1,3 @@
-library(shiny)
-library(tidyverse)
-library(readxl)
-library(plotly)
-library(tools)
-library(DT)
-library(shinydashboard)
-library(shinyauthr)
-library(shinymanager)
-
 source("functions/datatable_something.R")
 
 function(input, output, session) {
