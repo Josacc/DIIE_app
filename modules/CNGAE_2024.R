@@ -9,34 +9,44 @@ source('modules/CNGAE_2024/module_actualizacion.R')
 source("data/data_2024_year.R")
 
 CNGAE_2024_UI <- function(id) {
+  ns <- NS(id)
   tabItem(
     "CNGAE_analytics_2024",
-    navbarPage(
-      title       = "Análisis y seguimiento",
-      selected    = "Info",
-      collapsible = TRUE,
-      # 'Info analitica' module
-      info_analitica_UI(NS(id, 'id_info_analitica')),
-      # Observaciones
-      navbarMenu(
-        "Observaciones",
-        icon = icon("square-poll-vertical"),
-        # 'top ten' module
-        top_ten_UI(NS(id, 'id_top_ten'))
-      ),
-      # Cuestionarios
-      navbarMenu(
-        "Cuestionarios",
-        icon = icon("square-poll-vertical"),
-        # 'revisión oc' module
-        revision_oc_UI(NS(id, 'id_revision_oc')),
-        # 'en proceso de firma y sello (1)' module
-        proceso_firma_sello1_UI(NS(id, 'id_proceso_firma_sello1'))
-      ),
-      # Interno
-      interno_UI(NS(id, 'id_module_interno')),
-      # Actualización
-      actualizacion_UI(NS(id, 'id_module_actualizacion'))
+    fluidRow(
+      box(
+        solidHeader = TRUE,
+        width       = 12,
+        tabBox(
+          id    = ns('id_navbar_analytics'),
+          title = tags$p('Análisis y seguimiento', style = 'color: #3c8dbc;'),
+          width = 12,
+          tabPanel(
+            title = "Info",
+            icon  = icon("info-circle"),
+            info_analitica_UI(ns('id_info_analitica'))
+          ),
+          tabPanel(
+            title = "Observaciones",
+            icon  = icon("square-poll-vertical"),
+            top_ten_UI(ns('id_top_ten'))
+          ),
+          tabPanel(
+            title = "Revisión OC",
+            icon  = icon("square-poll-vertical"),
+            revision_oc_UI(ns('id_revision_oc'))
+          ),
+          tabPanel(
+            title = "Firma y sello (1)",
+            icon  = icon("square-poll-vertical"),
+            proceso_firma_sello1_UI(ns('id_proceso_firma_sello1'))
+          ),
+          tabPanel(
+            title = "Interno",
+            icon = icon("square-poll-vertical"),
+            interno_UI(ns('id_module_interno'))
+          )
+        )
+      )
     )
   )
 }

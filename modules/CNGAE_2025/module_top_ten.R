@@ -14,8 +14,8 @@ tm_tabPanels <- function(id, censo_name) {
 
 top_ten_UI <- function(id) {
   ns <- NS(id)
-  tabPanel(
-    "Top 10",
+  tagList(
+    br(),
     h4(
       p(strong("Top 10 preguntas más observadas")),
       style = "color: #3c8dbc; margin: 0rem; margin-top: -1rem; margin-bottom: 3rem;"

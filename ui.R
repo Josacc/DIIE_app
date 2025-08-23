@@ -17,31 +17,31 @@ source('contact/contact.R')
 source('modules/CNGAE_2024.R')
 source('modules/CNGAE_2025.R')
 
-secure_app(
-  theme    = shinytheme("flatly"),
-  language = "es",
-  id       = "auth",
-  tags_top = tags$div(
-    tags$h4(
-      "DIIE app",
-      style = "align:center;color:#1e4a75;font-weight:bold;"
-    ),
-    tags$img(
-      src = "logo.png", width = 250
-    )
-  ),
-  tags_bottom = tags$div(
-    tags$p(
-      "Cualquier pregunta, por favor contacte al ",
-      tags$a(
-        href = str_c(
-          "mailto:", contact_email, "?Subject=DIIE%20app%20autenticación"
-        ),
-        target ="_top", "administrator"
-      )
-    )
-  ),
-  lan = use_language("es"),
+# secure_app(
+#   theme    = shinytheme("flatly"),
+#   language = "es",
+#   id       = "auth",
+#   tags_top = tags$div(
+#     tags$h4(
+#       "DIIE app",
+#       style = "align:center;color:#1e4a75;font-weight:bold;"
+#     ),
+#     tags$img(
+#       src = "logo.png", width = 250
+#     )
+#   ),
+#   tags_bottom = tags$div(
+#     tags$p(
+#       "Cualquier pregunta, por favor contacte al ",
+#       tags$a(
+#         href = str_c(
+#           "mailto:", contact_email, "?Subject=DIIE%20app%20autenticación"
+#         ),
+#         target ="_top", "administrator"
+#       )
+#     )
+#   ),
+  # lan = use_language("es"),
   dashboardPage(
 
 
@@ -113,6 +113,15 @@ secure_app(
       tags$head(tags$style(HTML(
         ".content-wrapper {
         background-color: #FFFFFF;
+        }
+      /* Delete focus */
+      :focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+      }
+      .nav-tabs-custom {
+        box-shadow: none !important;
+        border: none !important;
       }
       .btn_custom_interno_1 {
         background-color: #3c8dbc;
@@ -136,4 +145,4 @@ secure_app(
       )
     )
   )
-)
+# )

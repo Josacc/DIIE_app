@@ -2,9 +2,7 @@
 
 interno_UI <- function(id) {
   ns <- NS(id)
-  tabPanel(
-    "Interno",
-    icon = icon("square-poll-vertical"),
+  tagList(
     div(
       class = "pull-right",
       logoutUI(

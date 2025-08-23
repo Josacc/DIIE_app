@@ -1,9 +1,8 @@
 # 'info analitica' module -------------------------------------------------
 
 info_analitica_UI <- function(id) {
-  tabPanel(
-    title = "Info",
-    icon  = icon("info-circle"),
+  tagList(
+    br(),
     tags$div(style = "text-align:   justify;
                               font-size:    20px;
                               color:        #1e4a75;

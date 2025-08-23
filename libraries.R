@@ -1,0 +1,16 @@
+shinyWidgets
+shinycssloaders
+shinyFeedback
+shinyfullscreen
+shinythemes
+tools
+shinydashboard
+shinyauthr
+patchwork
+scales
+plotly
+tidyverse
+readxl
+shiny
+shinymanager
+DT

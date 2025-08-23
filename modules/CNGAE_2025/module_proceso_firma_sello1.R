@@ -2,8 +2,8 @@
 
 proceso_firma_sello1_UI <- function(id) {
   ns <- NS(id)
-  tabPanel(
-    "En proceso de firma y sello (1)",
+  tagList(
+    br(),
     tabsetPanel(
       type = "pills",
       tabPanel(

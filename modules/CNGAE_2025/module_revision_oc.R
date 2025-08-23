@@ -2,8 +2,8 @@
 
 revision_oc_UI <- function(id) {
   ns <- NS(id)
-  tabPanel(
-    "Revisión OC",
+  tagList(
+    br(),
     tabsetPanel(
       type = "pills",
       tabPanel(
