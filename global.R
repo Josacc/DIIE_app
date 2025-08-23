@@ -1,6 +1,23 @@
 # DIIE app
 # by Josacc
 
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(shinydashboard)
+library(shinyWidgets)
+library(shinycssloaders)
+library(shiny)
+library(shinyFeedback)
+library(DT)
+library(shinyfullscreen)
+library(shinyauthr)
+library(shinymanager)
+library(shinythemes)
+library(tools)
+library(patchwork)
+library(scales)
+
 # Settings for shinyapss.io and Shiny Server
 options(
   encoding               = "UTF-8",
@@ -10,19 +27,12 @@ options(
 Sys.setlocale(locale = "es_MX.utf8")
 
 
-# USER BASES ---------------------------------------------------------------
-
 source("user_base/application_user_base.R")
 source("user_base/DIIE_user_base.R")
-# Databases for year
 source("data/data_2025_year.R")
-# source("data/data_2024_year.R")
 source("functions/data_and_update.R")
-# Plot function top ten questions by project and module
 source("functions/top_ten_questions.R")
-# Entities vs observations
 source("functions/entities_vs_observations.R")
-# EDA about questionnaires "Aclaración de información OC"
 source("functions/db_q_aclaracion_oc.R")
 
 set_labels(
