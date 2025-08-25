@@ -19,29 +19,34 @@ CNGAE_2025_UI <- function(id) {
         width       = 12,
         tabBox(
           id    = ns('id_navbar_analytics'),
-          title = tags$b('Análisis y seguimiento', style = 'color: #3c8dbc;'),
+          title = tags$p('Análisis y seguimiento', style = 'color: #3c8dbc;'),
           width = 12,
           selected = "Observaciones",
+
           tabPanel(
             title = "Info",
             icon  = icon("info-circle"),
             info_analitica_UI(ns('id_info_analitica'))
           ),
+
           tabPanel(
             title = "Observaciones",
             icon  = icon("square-poll-vertical"),
             top_ten_UI(ns('id_top_ten'))
           ),
+
           tabPanel(
             title = "Revisión OC",
             icon  = icon("square-poll-vertical"),
             revision_oc_UI(ns('id_revision_oc'))
           ),
+
           tabPanel(
             title = "Firma y sello (1)",
             icon  = icon("square-poll-vertical"),
             proceso_firma_sello1_UI(ns('id_proceso_firma_sello1'))
           ),
+
           tabPanel(
             title = "Interno",
             icon = icon("square-poll-vertical"),
@@ -59,7 +64,6 @@ CNGAE_2025_Server <- function(id) {
     info_analitica_Server('id_info_analitica')
 
     data <- reactive({
-
       database     <- data_and_update('historial_seguimiento/xIktan_20250511091935479_reporteSegumiento.xlsx')[[1]]
       update       <- data_and_update('historial_seguimiento/xIktan_20250511091935479_reporteSegumiento.xlsx')[[2]]
       database_obs <- team_data(reviewer_team, database) %>%

@@ -7,14 +7,15 @@ tm_tabPanels <- function(id, censo_name) {
     selectInput(
       inputId = NS(id, str_c("id_", censo_name)),
       label   = "Módulo",
-      choices = str_c("Módulo ", seq(module_count[module_count$Censo == censo_name, ][[2]]))
+      choices = str_c("Módulo ", seq(module_count_2024[module_count_2024$Censo == censo_name, ][[2]]))
     )
   )
 }
 
-top_ten_UI <- function(id) {
+top_ten_UI_2024 <- function(id) {
   tabPanel(
     "Top 10",
+    br(),
     h4(
       p(strong("Top 10 preguntas más observadas")),
       style = "color: #3c8dbc; margin: 0rem; margin-top: -1rem; margin-bottom: 3rem;"
@@ -27,14 +28,14 @@ top_ten_UI <- function(id) {
             selectInput(
               NS(id, "id_top_ten_question"),
               label   = "Censo",
-              choices = levels(DIIE_dates[[1]])
+              choices = levels(DIIE_dates_2024[[1]])
             )
           ),
           column(
             width = 6,
             do.call(
               tabsetPanel,
-              c(list(id = NS(id, "id_modulo_select"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
+              c(list(id = NS(id, "id_modulo_select"), type = "hidden"), map(module_count_2024[[1]], ~tm_tabPanels(id, .x)))
             )
           )
         )
@@ -57,7 +58,7 @@ top_ten_UI <- function(id) {
   )
 }
 
-top_ten_Server <- function(id, data) {
+top_ten_Server_2024 <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
     observeEvent(input$id_top_ten_question, {

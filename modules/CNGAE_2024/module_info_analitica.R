@@ -1,6 +1,6 @@
 # 'info analitica' module -------------------------------------------------
 
-info_analitica_UI <- function(id) {
+info_analitica_UI_2024 <- function(id) {
   tabPanel(
     title = "Info",
     icon  = icon("info-circle"),
@@ -39,7 +39,7 @@ info_analitica_UI <- function(id) {
   )
 }
 
-info_analitica_Server <- function(id) {
+info_analitica_Server_2024 <- function(id) {
   moduleServer(id, function(input, output, session) {
 
   })

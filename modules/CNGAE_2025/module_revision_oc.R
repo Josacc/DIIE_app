@@ -37,9 +37,9 @@ revision_oc_UI <- function(id) {
             sliderInput(
               ns("id_slider_date_questionnaires"),
               label = "Línea de tiempo por semana",
-              min   = floor_date(DIIE_dates %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3), # CNSIPEE start CE
-              max   = ceiling_date(tail(DIIE_dates$diffusion, 1), "week", week_start = 1), # last diffusion
-              value = floor_date(DIIE_dates %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3),
+              min   = floor_date(DIIE_dates_2025 %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3), # CNSIPEE start CE
+              max   = ceiling_date(tail(DIIE_dates_2025$diffusion, 1), "week", week_start = 1), # last diffusion
+              value = floor_date(DIIE_dates_2025 %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3),
               step  = weeks(1),
               animate = TRUE
             ),
@@ -118,7 +118,7 @@ revision_oc_Server <- function(id, data) {
 
       .data <- data()[[1]] %>%
         filter(str_detect(Estatus, "Revisión OC"), Perfil == "RESPONSABLE OPERATIVO") %>%
-        left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
+        left_join(working_dates_2025, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
         select(-Registro) %>%
         rename(Registro = aux_var) %>%
         filter(!(Folio %in% vector_folios_no_aplica))

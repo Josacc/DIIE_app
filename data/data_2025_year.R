@@ -4,7 +4,7 @@ source("data/reviewer_team.R")
 source("data/federal_entities.R")
 
 # Census
-t_census <- tibble(
+t_census_2025 <- tibble(
   Censo = c(
     "CNGE",
     "CNSPE",
@@ -18,11 +18,11 @@ t_census <- tibble(
 )
 
 # Assignment number to census
-num_to_census <- (`names<-`(levels(t_census[[1]]), as.character(nrow(t_census) %>% seq())))
+num_to_census_2025 <- (`names<-`(levels(t_census_2025[[1]]), as.character(nrow(t_census_2025) %>% seq())))
 
 # Database DIIE dates current year (update every year!).
-DIIE_dates <- tibble(
-  name = t_census$Censo,
+DIIE_dates_2025 <- tibble(
+  name = t_census_2025$Censo,
 
   `start CE` = ymd(
     c(
@@ -104,7 +104,7 @@ DIIE_dates <- tibble(
 )
 
 # Database on questionnaires (omit '1501' exclusive for CDMX, update every year!).
-questionnaires <- tibble(
+questionnaires_2025 <- tibble(
   Cuestionarios = c(
     "1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112", "1201", "1301", "1401", "1501", "1601", "1701", "1702", "1703",
     "2101", "2201",
@@ -118,38 +118,38 @@ questionnaires <- tibble(
 )
 
 # Module count by census.
-module_count <- questionnaires %>%
+module_count_2025 <- questionnaires_2025 %>%
   transmute(Cuestionario = str_sub(Cuestionarios, 1, 2)) %>%
   transmute(Cuestionario = as.double(Cuestionario)) %>%
   count(Cuestionario) %>%
   transmute(Censo = Cuestionario %/% 10) %>%
   count(Censo, name = "n_modulos") %>%
-  mutate(Censo = str_replace_all(Censo, num_to_census))
+  mutate(Censo = str_replace_all(Censo, num_to_census_2025))
 
 # Database on all folios except 091501 (update every year!).
-pre_id_folio <- federal_entities %>%
+pre_id_folio_2025 <- federal_entities %>%
   transmute(id_estado = as.character(id_estado)) %>%
   pull() %>%
-  map(~str_c(., pull(questionnaires %>% filter(!Cuestionarios == '1501')))) %>%
+  map(~str_c(., pull(questionnaires_2025 %>% filter(!Cuestionarios == '1501')))) %>%
   unlist() %>%
   tibble(Folio = .)
 
 # Add folio '091501' exclusive for CDMX
-id_091401 <- which(pre_id_folio$Folio == '091401')
-id_folio <- add_row(pre_id_folio, Folio = '091501', .after = id_091401)
+id_091401 <- which(pre_id_folio_2025$Folio == '091401')
+id_folio <- add_row(pre_id_folio_2025, Folio = '091501', .after = id_091401)
 
 # Databases on everybody "Folios" extended version (update every year!).
-id_folio_extended <- id_folio %>%
+id_folio_extended_2025 <- id_folio %>%
   separate(Folio, into = c("id_estado", "Censo_n", "Módulo"), sep = c(2, 3), remove = FALSE) %>%
-  mutate(Censo = str_replace_all(Censo_n, num_to_census)) %>%
+  mutate(Censo = str_replace_all(Censo_n, num_to_census_2025)) %>%
   mutate(id_estado = factor(id_estado, levels = levels(federal_entities[["id_estado"]]))) %>%
-  mutate(Censo_n   = factor(Censo_n  , levels = nrow(t_census) %>% seq())) %>%
-  mutate(Censo     = factor(Censo    , levels = levels(t_census$Censo))) %>%
+  mutate(Censo_n   = factor(Censo_n  , levels = nrow(t_census_2025) %>% seq())) %>%
+  mutate(Censo     = factor(Censo    , levels = levels(t_census_2025$Censo))) %>%
   left_join(federal_entities, by = "id_estado") %>%
   select(-Abreviatura)
 
 # Non-working days (update every year!).
-holidays <- tibble(
+holidays_2025 <- tibble(
   `Días Festivos` = ymd(c(
     "2025-01-01", "2025-02-03", "2025-03-17", "2025-04-17", "2025-04-18",
     "2025-05-01", "2025-05-05", "2025-07-08", "2025-09-16", "2025-11-02",
@@ -158,12 +158,12 @@ holidays <- tibble(
 )
 
 # Database dates current year. Attention in the year! (update every year!).
-dates_current_year <- tibble(Registro = (ymd("2025-01-01") + c(0:364)))
+dates_current_year_2025 <- tibble(Registro = (ymd("2025-01-01") + c(0:364)))
 
 # Database not-working days (update every year!).
-nonworking_days <- dates_current_year %>%
+nonworking_days_2025 <- dates_current_year_2025 %>%
   mutate(n = wday(Registro, week_start = 1)) %>%
-  filter(n > 5 | Registro %in% pull(holidays)) %>%
+  filter(n > 5 | Registro %in% pull(holidays_2025)) %>%
   pull(Registro)
 
 # Database function to get workday.
@@ -175,11 +175,11 @@ get_workday <- function(fecha, nw_days) {
 }
 
 # Database class Tibble con fechas del año y ajustadas a días efectivos (update every year!).
-working_dates <- dates_current_year %>%
+working_dates_2025 <- dates_current_year_2025 %>%
   pull() %>%
-  map_vec(get_workday, nw_days = nonworking_days) %>%
+  map_vec(get_workday, nw_days = nonworking_days_2025) %>%
   tibble(aux_var = .) %>%
-  bind_cols(dates_current_year) %>%
+  bind_cols(dates_current_year_2025) %>%
   relocate(Registro)
 
 # Database function to get folios with status "No aplica".
@@ -200,8 +200,8 @@ DT_folio_no_aplica <- function(principal_dataframe) {
 # Default data bases in previous year -------------------------------------
 
 # Database DIIE dates previous year (update every year!).
-DIIE_dates_previous_year <- tibble(
-  name = t_census$Censo,
+DIIE_dates_previous_year_2025 <- tibble(
+  name = t_census_2025$Censo,
 
   `start CE` = ymd(
     c(
@@ -283,7 +283,7 @@ DIIE_dates_previous_year <- tibble(
 )
 
 # Non-working days in previous year (update every year!).
-holidays_previous_year <- tibble(
+holidays_previous_year_2025 <- tibble(
   `Días Festivos` = ymd(c(
     "2024-01-01", "2024-02-05", "2024-03-18", "2024-03-28", "2024-03-29",
     "2024-05-01", "2024-05-05", "2024-07-08", "2024-09-16", "2024-10-01",
@@ -292,18 +292,18 @@ holidays_previous_year <- tibble(
 )
 
 # Database days previous year. Attention in the year! (update every year!).
-dates_previous_year <- tibble(Registro = (ymd("2024-01-01") + c(0:365)))
+dates_previous_year_2025 <- tibble(Registro = (ymd("2024-01-01") + c(0:365)))
 
 # Database not-working days previous year.
-nonworking_days_previous_year <- dates_previous_year %>%
+nonworking_days_previous_year_2025 <- dates_previous_year_2025 %>%
   mutate(n = wday(Registro, week_start = 1)) %>%
-  filter(n > 5 | Registro %in% pull(holidays_previous_year)) %>%
+  filter(n > 5 | Registro %in% pull(holidays_previous_year_2025)) %>%
   pull(Registro)
 
 # Database class Tibble con fechas del año y ajustadas a días efectivos.
-working_dates_previous_year <- dates_previous_year %>%
+working_dates_previous_year <- dates_previous_year_2025 %>%
   pull() %>%
-  map_vec(get_workday, nw_days = nonworking_days_previous_year) %>%
+  map_vec(get_workday, nw_days = nonworking_days_previous_year_2025) %>%
   tibble(aux_var = .) %>%
-  bind_cols(dates_previous_year) %>%
+  bind_cols(dates_previous_year_2025) %>%
   relocate(Registro)

@@ -1,8 +1,7 @@
 # 'interno' module --------------------------------------------------------
 
-interno_UI <- function(id) {
-  tabPanel(
-    "Interno",
+interno_UI_2024 <- function(id) {
+  tagList(
     icon = icon("square-poll-vertical"),
     div(
       class = "pull-right",
@@ -24,7 +23,7 @@ interno_UI <- function(id) {
   )
 }
 
-interno_Server <- function(id, data) { # probles into server
+interno_Server_2024 <- function(id, data) { # probles into server
   moduleServer(id, function(input, output, session) {
 
     credentials <- loginServer(
@@ -87,7 +86,7 @@ interno_Server <- function(id, data) { # probles into server
               radioButtons(
                 NS(id, "id_obs_vs_census_2023"),
                 "Nivel de análisis",
-                choices = c("GLOBAL", levels(DIIE_dates[[1]]))
+                choices = c("GLOBAL", levels(DIIE_dates_2024[[1]]))
               )
             ),
             mainPanel(

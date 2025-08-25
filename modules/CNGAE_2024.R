@@ -18,33 +18,38 @@ CNGAE_2024_UI <- function(id) {
         width       = 12,
         tabBox(
           id       = ns('id_navbar_analytics'),
-          title    = tags$b('Análisis y seguimiento', style = 'color: #3c8dbc;'),
+          title    = tags$p('Análisis y seguimiento', style = 'color: #3c8dbc;'),
           width    = 12,
           selected = 'Observaciones',
+
           tabPanel(
             title = "Info",
             icon  = icon("info-circle"),
-            info_analitica_UI(ns('id_info_analitica'))
+            info_analitica_UI_2024(ns('id_info_analitica'))
           ),
+
           tabPanel(
             title = "Observaciones",
             icon  = icon("square-poll-vertical"),
-            top_ten_UI(ns('id_top_ten'))
+            top_ten_UI_2024(ns('id_top_ten'))
           ),
+
           tabPanel(
             title = "Revisión OC",
             icon  = icon("square-poll-vertical"),
-            revision_oc_UI(ns('id_revision_oc'))
+            revision_oc_UI_2024(ns('id_revision_oc'))
           ),
+
           tabPanel(
             title = "Firma y sello (1)",
             icon  = icon("square-poll-vertical"),
-            proceso_firma_sello1_UI(ns('id_proceso_firma_sello1'))
+            proceso_firma_sello1_UI_2024(ns('id_proceso_firma_sello1'))
           ),
+
           tabPanel(
             title = "Interno",
             icon = icon("square-poll-vertical"),
-            interno_UI(ns('id_module_interno'))
+            interno_UI_2024(ns('id_module_interno'))
           )
         )
       )
@@ -57,7 +62,7 @@ CNGAE_2024_Server <- function(id) {
 
     data <- reactive({
       data_path <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
-      raw_data  <- data_and_update(data_path)
+      raw_data  <- data_and_update(data_path, year = 2024)
       database     <- raw_data[[1]]
       update       <- raw_data[[2]]
       database_obs <- team_data(reviewer_team, database) %>%
@@ -66,11 +71,11 @@ CNGAE_2024_Server <- function(id) {
       return(list(database, database_obs, update))
     })
 
-    info_analitica_Server('id_info_analitica')
-    top_ten_Server('id_top_ten', data)
-    revision_oc_Server('id_revision_oc', data)
-    proceso_firma_sello1_Server('id_proceso_firma_sello1', data)
-    interno_Server('id_module_interno', data)
+    info_analitica_Server_2024('id_info_analitica')
+    top_ten_Server_2024('id_top_ten', data)
+    revision_oc_Server_2024('id_revision_oc', data)
+    proceso_firma_sello1_Server_2024('id_proceso_firma_sello1', data)
+    interno_Server_2024('id_module_interno', data)
 
   })
 }

@@ -7,7 +7,7 @@ tm_tabPanels <- function(id, censo_name) {
     selectInput(
       inputId = ns(str_c("id_", censo_name)),
       label   = "Seleccionar el módulo",
-      choices = str_c("Módulo ", seq(module_count[module_count$Censo == censo_name, ][[2]]))
+      choices = str_c("Módulo ", seq(module_count_2025[module_count_2025$Censo == censo_name, ][[2]]))
     )
   )
 }
@@ -28,14 +28,14 @@ top_ten_UI <- function(id) {
             selectInput(
               ns("id_top_ten_question"),
               label   = "Seleccionar el censo",
-              choices = levels(pull(t_census))
+              choices = levels(pull(t_census_2025))
             )
           ),
           column(
             width = 6,
             do.call(
               tabsetPanel,
-              c(list(id = ns("id_modulo_select"), type = "hidden"), map(module_count[[1]], ~tm_tabPanels(id, .x)))
+              c(list(id = ns("id_modulo_select"), type = "hidden"), map(module_count_2025[[1]], ~tm_tabPanels(id, .x)))
             )
           )
         )

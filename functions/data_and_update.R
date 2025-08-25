@@ -1,5 +1,7 @@
 # Reading and first sorting of data
-data_and_update <- function(.file) {
+data_and_update <- function(.file, year = 2025) {
+
+  DIIE_dates <- str_c('DIIE_dates_', year) %>% get(envir = .GlobalEnv)
 
   pre_data <- read_xlsx(.file, skip = 8)
 

@@ -56,7 +56,7 @@ proceso_firma_sello1_UI <- function(id) {
                     selectInput(
                       ns("id_questionnaires_firma_sello_census"),
                       "Seleccionar el censo",
-                      choices = c("GLOBAL", levels(DIIE_dates[[1]])),
+                      choices = c("GLOBAL", levels(DIIE_dates_2025[[1]])),
                       width = "150px"
                     ),
                     p(strong("Acumulado de cuestionarios en proceso de firma y sello (1): "),
@@ -69,11 +69,11 @@ proceso_firma_sello1_UI <- function(id) {
                     sliderInput(
                       ns("id_slider_date_questionnaires_firma_sello"),
                       label = "Línea de tiempo",
-                      min   = DIIE_dates[[3, 2]], # CNSIPEE start CE
-                      max   = tail(pull(DIIE_dates), 1), # last diffusion
+                      min   = DIIE_dates_2025[[3, 2]], # CNSIPEE start CE
+                      max   = tail(pull(DIIE_dates_2025), 1), # last diffusion
                       value = c(
-                        DIIE_dates[[3, 2]],
-                        tail(pull(DIIE_dates), 1)
+                        DIIE_dates_2025[[3, 2]],
+                        tail(pull(DIIE_dates_2025), 1)
                       ),
                       step  = days(1)
                     ),
@@ -169,7 +169,7 @@ proceso_firma_sello1_Server <- function(id, data) {
 
       .data <- data()[[1]] %>%
         filter(str_detect(Estatus, "En proceso de firma y sello \\(1\\)")) %>%
-        left_join(working_dates, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
+        left_join(working_dates_2025, by = "Registro") %>% # Se modificó "Registro" para considerar solo días hábiles.
         select(-Registro) %>%
         rename(Registro = aux_var) %>%
         filter(!(Folio %in% vector_folios_no_aplica))
@@ -254,7 +254,7 @@ proceso_firma_sello1_Server <- function(id, data) {
         inputId = "id_slider_date_questionnaires_firma_sello",
         max = dmy_hms(data()[[3]]) %>% as_date(),
         value = c(
-          DIIE_dates[[3, 2]],
+          DIIE_dates_2025[[3, 2]],
           dmy_hms(data()[[3]]) %>% as_date()
         )
       )
@@ -262,7 +262,7 @@ proceso_firma_sello1_Server <- function(id, data) {
 
     # Change value of count set free questionnaires by day
     observeEvent(input$id_slider_date_questionnaires_firma_sello, {
-      if ((input$id_slider_date_questionnaires_firma_sello)[1] == DIIE_dates[[3, 2]] &&
+      if ((input$id_slider_date_questionnaires_firma_sello)[1] == DIIE_dates_2025[[3, 2]] &&
           (input$id_slider_date_questionnaires_firma_sello)[2] == dmy(word(data()[[3]], 1))) {
         return(updateTabsetPanel(session, inputId = "id_text_questionnaires_firma_sello_range", selected = "accumulated"))
       }
