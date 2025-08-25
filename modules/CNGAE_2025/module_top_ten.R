@@ -27,8 +27,9 @@ top_ten_UI <- function(id) {
             width = 6,
             selectInput(
               ns("id_top_ten_question"),
-              label   = "Seleccionar el censo",
-              choices = levels(pull(t_census_2025))
+              label    = "Seleccionar el censo",
+              choices  = levels(pull(t_census_2025)),
+              selected = 'CNSIPEE'
             )
           ),
           column(

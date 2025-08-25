@@ -75,7 +75,8 @@ proceso_firma_sello1_UI <- function(id) {
                         DIIE_dates_2025[[3, 2]],
                         tail(pull(DIIE_dates_2025), 1)
                       ),
-                      step  = days(1)
+                      step  = days(1),
+                      pre = 'Semana: '
                     ),
                     tabsetPanel(
                       id = ns("id_text_questionnaires_firma_sello_range"),

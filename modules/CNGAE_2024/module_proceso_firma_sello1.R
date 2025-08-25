@@ -1,10 +1,13 @@
 # 'En proceso de firma y sello (1)' module --------------------------------
 
 proceso_firma_sello1_UI_2024 <- function(id) {
-  tabPanel(
-    "En proceso de firma y sello (1)",
+
+  tagList(
+
     tabsetPanel(
       type = "pills",
+
+
       tabPanel(
         "Cuestionarios en proceso de firma y sello (1)",
         br(),
@@ -52,7 +55,8 @@ proceso_firma_sello1_UI_2024 <- function(id) {
                         DIIE_dates_2024[[3, 2]],
                         tail(pull(DIIE_dates_2024), 1)
                       ),
-                      step  = days(1)
+                      step  = days(1),
+                      pre = 'Semana: '
                     ),
                     tabsetPanel(
                       id = NS(id, "id_text_questionnaires_firma_sello_range"),
@@ -130,8 +134,10 @@ proceso_firma_sello1_UI_2024 <- function(id) {
             )
           )
         ),
-        br(),
+        br()
       ),
+
+
       tabPanel(
         "Cuestionarios en proceso de firma y sello (1) por entidad",
         br(),
@@ -203,7 +209,7 @@ proceso_firma_sello1_Server_2024 <- function(id, data) {
     # Plot global
     reactive_questionnaires_firma_sello_week_global <- reactive({
       req(database_firma_sello())
-      plot_questionnaires_firma_sello_week(database_firma_sello())
+      plot_questionnaires_firma_sello_week(database_firma_sello(), year = 2024)
     })
 
     output$plot_questionnaires_firma_sello_week_global <- renderPlotly({
@@ -215,7 +221,7 @@ proceso_firma_sello1_Server_2024 <- function(id, data) {
     # Plot and DT by census
     reactive_questionnaires_firma_sello_week_census <- reactive({
       req(database_firma_sello())
-      plot_questionnaires_firma_sello_week_project(database_firma_sello(), input$id_questionnaires_firma_sello_census)
+      plot_questionnaires_firma_sello_week_project(database_firma_sello(), input$id_questionnaires_firma_sello_census, year = 2024)
     })
 
     output$plot_questionnaires_firma_sello_week_census <- renderPlotly({
@@ -311,10 +317,10 @@ proceso_firma_sello1_Server_2024 <- function(id, data) {
     reactive_questionnaires_firma_sello_entity <- reactive({
       req(database_firma_sello())
       if (input$id_questionnaires_firma_sello_entity == "NACIONAL") {
-        return(plot_questionnaires_firma_sello_light(database_firma_sello()))
+        return(plot_questionnaires_firma_sello_light(database_firma_sello(), year = 2024))
       }
 
-      plot_questionnaires_firma_sello_light_entities(database_firma_sello(), input$id_questionnaires_firma_sello_entity)
+      plot_questionnaires_firma_sello_light_entities(database_firma_sello(), input$id_questionnaires_firma_sello_entity, year = 2024)
     })
 
     output$plot_questionnaires_firma_sello_entity <- renderPlotly({

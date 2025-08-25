@@ -41,7 +41,8 @@ revision_oc_UI <- function(id) {
               max   = ceiling_date(tail(DIIE_dates_2025$diffusion, 1), "week", week_start = 1), # last diffusion
               value = floor_date(DIIE_dates_2025 %>% filter(name == "CNSIPEE") %>% select(`start CE`) %>% .[[1]], "week", week_start = 1) + weeks(3),
               step  = weeks(1),
-              animate = TRUE
+              animate = TRUE,
+              pre = 'Semana: '
             ),
             p(strong("Cantidad de cuestionarios enviados a revisión OC por semana: "),
               strong(textOutput(ns("text_count_questionnaires"), inline = TRUE)),

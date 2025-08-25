@@ -41,6 +41,8 @@ interno_Server_2024 <- function(id, data) { # probles into server
 
     output$diie_interno <- renderUI({
       req(credentials()$user_auth)
+
+
       tabsetPanel(
         type = "pills",
         tabPanel(

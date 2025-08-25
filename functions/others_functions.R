@@ -5,7 +5,9 @@ team_data <- function(team, data) {
 }
 
 # Plot about arrival general of questionnaires in previous year
-plot_arrival_questionnaires_previous_year <- function(data, .week, .title = "") { #ajustar similar a la función sobre firma y sello
+plot_arrival_questionnaires_previous_year <- function(data, .week, .title = "", year = 2025) { #ajustar similar a la función sobre firma y sello
+
+  DIIE_dates_previous_year <- str_c('DIIE_dates_previous_year_', year) %>% get(envir = .GlobalEnv)
 
   suppressWarnings({
     .plot <- data %>%
