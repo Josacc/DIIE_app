@@ -9,46 +9,52 @@ source('modules/CNGAE_2024/module_actualizacion.R')
 source("data/data_2024_year.R")
 
 CNGAE_2024_UI <- function(id) {
+
   ns <- NS(id)
+
   tabItem(
     "CNGAE_analytics_2024",
+
     fluidRow(
       box(
-        solidHeader = TRUE,
         width       = 12,
-        tabBox(
+        solidHeader = TRUE,
+
+        tabsetPanel(
           id       = ns('id_navbar_analytics'),
-          title    = tags$p('Análisis y seguimiento', style = 'color: #3c8dbc;'),
-          width    = 12,
           selected = 'Observaciones',
 
           tabPanel(
-            title = "Info",
-            icon  = icon("info-circle"),
+            title = tags$b('Análisis y seguimiento'),
+            br(),
             info_analitica_UI_2024(ns('id_info_analitica'))
           ),
 
           tabPanel(
             title = "Observaciones",
             icon  = icon("square-poll-vertical"),
+            br(),
             top_ten_UI_2024(ns('id_top_ten'))
           ),
 
           tabPanel(
             title = "Revisión OC",
             icon  = icon("square-poll-vertical"),
+            br(),
             revision_oc_UI_2024(ns('id_revision_oc'))
           ),
 
           tabPanel(
             title = "Firma y sello (1)",
             icon  = icon("square-poll-vertical"),
+            br(),
             proceso_firma_sello1_UI_2024(ns('id_proceso_firma_sello1'))
           ),
 
           tabPanel(
             title = "Interno",
             icon = icon("square-poll-vertical"),
+            br(),
             interno_UI_2024(ns('id_module_interno'))
           )
         )

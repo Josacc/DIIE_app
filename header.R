@@ -14,7 +14,7 @@ header <- dashboardHeader(
   tags$li(
     class = "dropdown",
     style = "display: flex; align-items: center; height: 50px;",
-    actionBttn("page_full", style = "stretch", icon("maximize"))
+    actionButton("page_toggle", label = NULL, icon = icon("maximize"))
   ),
 
   dropdownMenu(

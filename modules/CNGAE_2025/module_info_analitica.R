@@ -2,7 +2,7 @@
 
 info_analitica_UI <- function(id) {
   tagList(
-    br(),
+
     tags$div(style = "text-align:   justify;
                               font-size:    20px;
                               color:        #1e4a75;

@@ -5,7 +5,16 @@ source('modules/CNGAE_2025.R')
 body <- dashboardBody(
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "style.css")),
 
-  fullscreen_all(click_id = "page_full"),
+  useShinyjs(),
+
+  tags$script(HTML("
+      Shiny.addCustomMessageHandler('exitFullScreen', function(message) {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      });
+    ")),
+
 
   tabItems(
     CNGAE_2024_UI('id_CNGAE_2024'),

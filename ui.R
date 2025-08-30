@@ -1,19 +1,3 @@
-library(tidyverse)
-library(readxl)
-library(plotly)
-library(shinydashboard)
-library(shinyWidgets)
-library(shinycssloaders)
-library(shiny)
-library(shinyFeedback)
-library(DT)
-library(shinyfullscreen)
-library(shinyauthr)
-library(shinymanager)
-library(shinythemes)
-library(tools)
-library(patchwork)
-library(scales)
 
 source('header.R')
 source('sidebar.R')
@@ -40,5 +24,5 @@ source('body.R')
 #   ),
 #   lan = use_language("es"),
 
-  dashboardPage(header, sidebar, body, title = 'DIIE app')
+  dashboardPage(header, sidebar, body, title = 'DIIE app', skin = 'purple')
 # )

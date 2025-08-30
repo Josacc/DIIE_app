@@ -1,8 +1,9 @@
 # 'interno' module --------------------------------------------------------
 
 interno_UI_2024 <- function(id) {
+
   tagList(
-    icon = icon("square-poll-vertical"),
+
     div(
       class = "pull-right",
       logoutUI(

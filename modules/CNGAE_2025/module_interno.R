@@ -1,7 +1,9 @@
 # 'interno' module --------------------------------------------------------
 
 interno_UI <- function(id) {
+
   ns <- NS(id)
+
   tagList(
     div(
       class = "pull-right",
@@ -25,6 +27,7 @@ interno_UI <- function(id) {
 
 interno_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
     ns <- session$ns
 
     credentials <- loginServer(
@@ -41,7 +44,9 @@ interno_Server <- function(id, data) {
     )
 
     output$diie_interno <- renderUI({
+
       req(credentials()$user_auth)
+
       tabsetPanel(
         type = "pills",
         tabPanel(

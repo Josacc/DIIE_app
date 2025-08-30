@@ -25,7 +25,30 @@
   color: white;
 }
 
-.skin-blue .main-header .logo {
-  background-color: #3c8dbc !important;
+.skin-purple .main-header .logo {
+  background-color: #615da8 !important;
   color: white !important;
 }
+
+
+#page_toggle {
+  background-color: #605ca8 !important;
+  border: none !important;
+  color: white !important;
+  height: 50px !important;
+  width: 50px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+#page_toggle:hover {
+  background-color: #514c8a !important;
+  border: none !important;
+}
+
+
+.skin-purple .main-header .navbar .dropdown {
+  padding: 0 !important;
+}
+
