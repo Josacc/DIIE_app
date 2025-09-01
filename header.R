@@ -3,12 +3,12 @@ source('contact/contact.R')
 
 header <- dashboardHeader(
 
-  titleWidth = 200,
+  titleWidth = 320,
 
   title     = tags$div(
     style = "display: flex; align-items: center; padding-left: 17px;",
     tags$img(src = "logo_dashboardheader.png", height = "40px", style  = "margin-right: 10px;"),
-    tags$span("DIIE app", style = "font-size: 16px; font-weight: bold;")
+    tags$span('Censo Nacional de Gobierno', style = "font-size: 16px; font-weight: bold;")
   ),
 
   tags$li(

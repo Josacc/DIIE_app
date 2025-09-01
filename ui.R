@@ -9,7 +9,7 @@ source('body.R')
 #   id       = "auth",
 #
 #   tags_top = tags$div(
-#     tags$h4("DIIE app", style = "align:center;color:#1e4a75;font-weight:bold;"),
+#     tags$h4('Censo Nacional de Gobierno', style = "align:center;color:#1e4a75;font-weight:bold;"),
 #     tags$img(src = "logo.png", width = 250)
 #   ),
 #
@@ -24,5 +24,5 @@ source('body.R')
 #   ),
 #   lan = use_language("es"),
 
-  dashboardPage(header, sidebar, body, title = 'DIIE app', skin = 'purple')
+  dashboardPage(header, sidebar, body, title = 'Censo Nacional de Gobierno', skin = 'purple')
 # )

@@ -2,114 +2,91 @@
 
 interno_UI_2024 <- function(id) {
 
+  ns <- NS(id)
+
   tagList(
 
-    div(
-      class = "pull-right",
-      logoutUI(
-        id    = NS(id, "logout"),
-        label = "",
-        icon  = icon("sign-out-alt")
-      )
-    ),
-    loginUI(
-      id            = NS(id, "login"),
-      title         = "",
-      user_title    = "Usuario",
-      pass_title    = "Contraseña",
-      login_title   = "Iniciar sesión",
-      error_message = "¡Usuario o contraseña no válidos!",
-    ),
-    uiOutput(NS(id, "diie_interno"))
-  )
-}
+    tabsetPanel(
+      type = "pills",
 
-interno_Server_2024 <- function(id, data) { # probles into server
-  moduleServer(id, function(input, output, session) {
+      tabPanel(
+        "Revisiones por OC",
+        br(), br(),
 
-    credentials <- loginServer(
-      id       = "login",
-      data     = DIIE_user_base,
-      user_col = user,
-      pwd_col  = password,
-      log_out  = reactive(logout_init())
-    )
-
-    logout_init <- logoutServer(
-      id     = "logout",
-      active = reactive(credentials()$user_auth)
-    )
-
-    output$diie_interno <- renderUI({
-      req(credentials()$user_auth)
-
-
-      tabsetPanel(
-        type = "pills",
-        tabPanel(
-          "Revisiones por OC",
-          br(), br(),
-          h4(
-            p(strong("Tabulado de revisiones efectuadas por OC")),
-            style = "color: #3c8dbc; margin: 0rem; margin-top: -1rem; margin-bottom: 3rem;"
-          ),
-          p(strong("NA: "), "cuestionario no aplica"),
-          p(strong("NR: "), "cuestionario no revisado"),
-          br(),
-          DTOutput("table_q_aclaracion_oc"),
-          br(),
-          strong(textOutput(NS(id, "id_celdas_seleccionadas"))),
-          fluidRow(
-            column(
-              width = 12,
-              actionButton(
-                NS(id, "id_bttn_clear_selection"),
-                label = "Limpiar selección",
-                icon  = icon("broom"),
-                class = "btn_custom_interno_1"
-              ),
-              actionButton(
-                NS(id, "id_bttn_filter_obs"),
-                label = "Filtrar",
-                icon  = icon("filter"),
-                class = "btn_custom_interno_2"
-              )
-            )
-          ),
-          br(), br(), br(),
-          DTOutput(NS(id, "data_q_aclaracion_oc")),
-          br(), br(), br(), br()
+        h4(
+          p(strong("Tabulado de revisiones efectuadas por OC")),
+          style = "color: #3c8dbc; margin: 0rem; margin-top: -1rem; margin-bottom: 3rem;"
         ),
-        tabPanel(
-          "Ranking de entidades por preguntas observadas",
-          br(), br(),
-          sidebarLayout(
-            sidebarPanel(
-              width = 2,
-              radioButtons(
-                NS(id, "id_obs_vs_census_2023"),
-                "Nivel de análisis",
-                choices = c("GLOBAL", levels(DIIE_dates_2024[[1]]))
-              )
+
+        p(strong("NA: "), "cuestionario no aplica"),
+        p(strong("NR: "), "cuestionario no revisado"),
+        br(),
+
+        DTOutput("table_q_aclaracion_oc"),
+        br(),
+
+        strong(textOutput(ns("id_celdas_seleccionadas"))),
+
+        fluidRow(
+
+          column(
+            width = 12,
+            actionButton(
+              ns("id_bttn_clear_selection"),
+              label = "Limpiar selección",
+              icon  = icon("broom"),
+              class = "btn_custom_interno_1"
             ),
-            mainPanel(
-              style = "height: 500px",
-              width = 10,
-              actionBttn(
-                inputId = NS(id, "info_button_obs_enviadas_OC"),
-                label   = "",
-                icon    = icon("info-circle"),
-                style   = "jelly"
-              ),
-              br(), br(),
-              plotlyOutput(
-                NS(id, "plot_obs_vs_census_2023")
-              )
+            actionButton(
+              ns("id_bttn_filter_obs"),
+              label = "Filtrar",
+              icon  = icon("filter"),
+              class = "btn_custom_interno_2"
             )
+          )
+        ),
+        br(), br(), br(),
+
+        DTOutput(ns("data_q_aclaracion_oc")),
+        br(), br(), br(), br()
+      ),
+
+      tabPanel(
+        "Ranking de entidades por preguntas observadas",
+        br(), br(),
+
+        sidebarLayout(
+
+          sidebarPanel(
+            width = 2,
+            radioButtons(
+              ns("id_obs_vs_census_2023"),
+              "Nivel de análisis",
+              choices = c("GLOBAL", levels(DIIE_dates_2024[[1]]))
+            )
+          ),
+
+          mainPanel(
+            style = "height: 500px",
+            width = 10,
+            actionBttn(
+              inputId = ns("info_button_obs_enviadas_OC"),
+              label   = "",
+              icon    = icon("info-circle"),
+              style   = "jelly"
+            ),
+            br(), br(),
+            plotlyOutput(ns("plot_obs_vs_census_2023"))
           )
         )
       )
-    })
+    )
+  )
+}
+
+interno_Server_2024 <- function(id, data) {
+  moduleServer(id, function(input, output, session) {
+
 
     # Ranking entidades
     reactive_obs_vs_census_2023 <- reactive({
@@ -128,14 +105,15 @@ interno_Server_2024 <- function(id, data) { # probles into server
 
     # Ranking entidades
     output$plot_obs_vs_census_2023 <- renderPlotly({
-      req(credentials()$user_auth)
+
       validate(need(reactive_obs_vs_census_2023(), "Sin observaciones"))
       reactive_obs_vs_census_2023()
+
     })
 
     # Info Ranking entidades.
     observeEvent(input$info_button_obs_enviadas_OC, {
-      req(credentials()$user_auth)
+
       show_alert(
         session = session,
         title   = "",
@@ -158,20 +136,24 @@ interno_Server_2024 <- function(id, data) { # probles into server
 
     # Table questionnaires aclaracion oc
     output$table_q_aclaracion_oc <- renderDT({
-      req(credentials()$user_auth)
       db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$datatable
     }, server = FALSE)
+
 
     bttn_filter_obs <- eventReactive(input$id_bttn_filter_obs, {
       input$table_q_aclaracion_oc_cells_selected
     })
 
+
     observeEvent(input$id_bttn_clear_selection, {
+
       proxy <- dataTableProxy("table_q_aclaracion_oc")
       selectCells(proxy, NULL)
+
     })
 
     output$id_celdas_seleccionadas <- renderText({
+
       paste0(
         "Celdas seleccionadas: ",
         nrow(input$table_q_aclaracion_oc_cells_selected)
@@ -180,7 +162,7 @@ interno_Server_2024 <- function(id, data) { # probles into server
     })
 
     output$data_q_aclaracion_oc = renderDT({
-      req(credentials()$user_auth)
+      # req(credentials()$user_auth)
 
       db_q_aclaracion_oc_filter(
         db_q_aclaracion_oc(data()[[1]], c("8101", "8201", "8301"))$data,

@@ -5,6 +5,7 @@ interno_UI <- function(id) {
   ns <- NS(id)
 
   tagList(
+
     div(
       class = "pull-right",
       logoutUI(
