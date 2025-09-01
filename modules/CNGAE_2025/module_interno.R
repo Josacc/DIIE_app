@@ -17,8 +17,8 @@ interno_UI <- function(id) {
     loginUI(
       id            = ns("login"),
       title         = "",
-      user_title    = "Usuario",
-      pass_title    = "Contraseña",
+      user_title    = "Usuario (DIIE)",
+      pass_title    = "Contraseña (admin1)",
       login_title   = "Iniciar sesión",
       error_message = "¡Usuario o contraseña no válidos!",
     ),
@@ -94,7 +94,7 @@ interno_Server <- function(id, data) {
               radioButtons(
                 ns("id_obs_vs_census_2023"),
                 "Seleccionar el nivel de análisis",
-                choices = c("GLOBAL", levels(pull(t_census)))
+                choices = c("GLOBAL", levels(pull(t_census_2025)))
               )
             ),
             mainPanel(

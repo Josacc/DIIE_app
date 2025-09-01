@@ -1,5 +1,7 @@
 # "Aclaración de información OC" questionnaires database function
-db_q_aclaracion_oc <- function(database, delete_q = NULL) {
+db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
+
+  id_folio_extended <- str_c('id_folio_extended_', year) %>% get(envir = .GlobalEnv)
 
   .data <- database %>%
     filter(!(Folio %in% pull(DT_folio_no_aplica(database)))) %>%
