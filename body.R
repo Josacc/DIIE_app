@@ -1,8 +1,10 @@
 # shiny dashboardBody
 source('modules/CNGAE_2024.R')
 source('modules/CNGAE_2025.R')
+source('modules/CNGAE_operative_2023.R')
 
 body <- dashboardBody(
+
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "style.css")),
 
   useShinyjs(),
@@ -17,7 +19,12 @@ body <- dashboardBody(
 
 
   tabItems(
+
     CNGAE_2024_UI('id_CNGAE_2024'),
-    CNGAE_2025_UI('id_CNGAE_2025')
+
+    CNGAE_2025_UI('id_CNGAE_2025'),
+
+    CNGAE_operative_2023_UI('id_CNGAE_operative_2023')
+
   )
 )

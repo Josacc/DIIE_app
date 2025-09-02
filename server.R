@@ -31,8 +31,10 @@ function(input, output, session) {
   })
 
 
-  # CNGAE 2024
   CNGAE_2024_Server('id_CNGAE_2024')
+
   CNGAE_2025_Server('id_CNGAE_2025')
+
+  CNGAE_operative_2023_Server('id_CNGAE_operative_2023')
 
 }

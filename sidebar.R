@@ -13,5 +13,15 @@ sidebar <- dashboardSidebar(
       menuItem("CNGAE 2024", tabName = "CNGAE_analytics_2024"),
       menuItem("CNGAE 2025", tabName = "CNGAE_analytics_2025")
     )
+  ),
+  br(),
+
+  sidebarMenu(
+    menuItem(
+      'Evaluación',
+      tabName = 'CNGAE_operative_2023',
+      icon    = icon('chart-simple')
+    )
   )
+
 )
