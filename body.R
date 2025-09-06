@@ -2,9 +2,10 @@
 
 source('modules/CNGAE_2024.R')
 source('modules/CNGAE_2025.R')
-source('modules/CNGAE_operative_citas_2023.R')
-source('modules/CNGAE_operative_recupera_2023.R')
-source('modules/CNGAE_operative_revision_2023.R')
+source('modules/evaluation/CNGAE_operative_citas_2023.R')
+source('modules/evaluation/CNGAE_operative_recupera_2023.R')
+source('modules/evaluation/CNGAE_operative_revision_2023.R')
+source('modules/evaluation/module_evaluation.R')
 
 body <- dashboardBody(
 
@@ -21,17 +22,9 @@ body <- dashboardBody(
     ")),
 
 
-  tabItems(
+    do.call(
+      tabItems,
+      c(list(CNGAE_2024_UI('id_CNGAE_2024'), CNGAE_2025_UI('id_CNGAE_2025')), module_evaluation_UI('id_evaluation'))
+    )
 
-    CNGAE_2024_UI('id_CNGAE_2024'),
-
-    CNGAE_2025_UI('id_CNGAE_2025'),
-
-    CNGAE_operative_citas_2023_UI('id_CNGAE_operative_citas_2023'),
-
-    CNGAE_operative_recupera_2023_UI('id_CNGAE_operative_recupera_2023'),
-
-    CNGAE_operative_revision_2023_UI('id_CNGAE_operative_revision_2023')
-
-  )
 )

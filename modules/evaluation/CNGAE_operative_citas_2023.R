@@ -1,7 +1,7 @@
 # 'CNGAE_operative_citas_2023' module ---------------------------------------------
 
 source("data/data_2023_year.R")
-source('modules/operative/operative_global.R')
+source('modules/evaluation/operative_global.R')
 
 CNGAE_operative_citas_2023_UI <- function(id) {
 
@@ -136,24 +136,11 @@ CNGAE_operative_citas_2023_UI <- function(id) {
   )
 }
 
-CNGAE_operative_citas_2023_Server <- function(id) {
+CNGAE_operative_citas_2023_Server <- function(id, database_DOE) {
   moduleServer(id, function(input, output, session) {
 
     observeEvent(input$id_select_panel_entity, {
       updateTabsetPanel(session, inputId = "id_tab_evaluacion", selected = input$id_select_panel_entity)
-    })
-
-
-    # Data base for DOE analisys.
-    database_DOE <- reactive({
-
-      data_operative <- 'historial_seguimiento/xIktan_20231005104808909_reporteSegumiento.xlsx' %>%
-        data_and_update_2023()
-
-      data_operative <- data_operative[[1]] %>%
-        write_database_DOE()
-
-      return(data_operative)
     })
 
 

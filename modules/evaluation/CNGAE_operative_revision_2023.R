@@ -1,14 +1,14 @@
-# 'CNGAE_operative_recupera_2023' module ---------------------------------------------
+# 'CNGAE_operative_revision_2023' module ---------------------------------------------
 
 source("data/data_2023_year.R")
-source('modules/operative/operative_global.R')
+source('modules/evaluation/operative_global.R')
 
-CNGAE_operative_recupera_2023_UI <- function(id) {
+CNGAE_operative_revision_2023_UI <- function(id) {
 
   ns <- NS(id)
 
   tabItem(
-    'CNGAE_operative_recupera_2023',
+    'CNGAE_operative_revision_2023',
 
     fluidRow(
 
@@ -56,7 +56,7 @@ CNGAE_operative_recupera_2023_UI <- function(id) {
             width = 10,
 
             tabsetPanel(
-              selected = 'Recuperación oportuna de la información',
+              selected = 'Duración del levantamiento por etapas',
 
               tabPanel(
                 tags$b('Seguimiento y Evaluación'),
@@ -98,30 +98,29 @@ CNGAE_operative_recupera_2023_UI <- function(id) {
 
               ),
 
-              # Graphics 'Recuperación oportuna de la información'.
+              # Graphics 'Duración del levantamiento por etapas'.
               tabPanel(
-                'Recuperación oportuna de la información',
-                icon = icon('chart-bar'),
-                br(),
-
-                actionBttn(ns('info_button_recuperacion_informacion'), label = '', icon = icon('info-circle'), style = 'jelly'),
-                br(),br(),
-
-                plotlyOutput(ns('plot_recuperacion_informacion_oportuna'), height = '300px'),
-                dataTableOutput(ns('table_recuperacion_informacion'))
-              ),
-
-
-              # Graphics 'Intervalos promedio de recuperación'.
-              tabPanel(
-                'Intervalos promedio de recuperación',
+                'Duración del levantamiento por etapas',
                 icon = icon('chart-column'),
                 br(),
 
-                actionBttn(ns('info_button_intervalos_recuperacion'), label = '', icon = icon('info-circle'), style = 'jelly'),
+                actionBttn(ns('info_button_levantamiento_estapas'), label = '', icon = icon('info-circle'), style = 'jelly'),
                 br(), br(),
 
-                plotlyOutput(ns('plot_promedio_recuperacion'), height = '700px')
+                plotlyOutput(ns('plot_levantamiento_estapas'))
+              ),
+
+
+              # Graphics 'Revisiones realizadas a los cuestionarios'.
+              tabPanel(
+                'Revisiones realizadas a los cuestionarios',
+                icon = icon('chart-column'),
+                br(),
+
+                actionBttn(ns('info_button_revisiones_cuestionarios'), label = '', icon = icon('info-circle'), style = 'jelly'),
+                br(), br(),
+
+                plotlyOutput(ns('plot_revisiones_realizadas'))
               )
             )
           )
@@ -131,26 +130,12 @@ CNGAE_operative_recupera_2023_UI <- function(id) {
   )
 }
 
-CNGAE_operative_recupera_2023_Server <- function(id) {
+CNGAE_operative_revision_2023_Server <- function(id, database_DOE) {
   moduleServer(id, function(input, output, session) {
 
     observeEvent(input$id_select_panel_entity, {
       updateTabsetPanel(session, inputId = "id_tab_evaluacion", selected = input$id_select_panel_entity)
     })
-
-
-    # Data base for DOE analisys.
-    database_DOE <- reactive({
-
-      data_operative <- 'historial_seguimiento/xIktan_20231005104808909_reporteSegumiento.xlsx' %>%
-        data_and_update_2023()
-
-      data_operative <- data_operative[[1]] %>%
-        write_database_DOE()
-
-      return(data_operative)
-    })
-
 
     # Data base "evolución del levantamiento".
     database_evolucion_levantamiento <- reactive(DT_evolucion_levantamiento(database_DOE()))
@@ -665,7 +650,6 @@ CNGAE_operative_recupera_2023_Server <- function(id) {
         rownames = FALSE
       )
     )
-
 
   })
 }

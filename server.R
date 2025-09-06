@@ -35,10 +35,6 @@ function(input, output, session) {
 
   CNGAE_2025_Server('id_CNGAE_2025')
 
-  CNGAE_operative_citas_2023_Server('id_CNGAE_operative_citas_2023')
-
-  CNGAE_operative_recupera_2023_Server('id_CNGAE_operative_recupera_2023')
-
-  CNGAE_operative_revision_2023_Server('id_CNGAE_operative_revision_2023')
+  module_evaluation_Server('id_evaluation')
 
 }

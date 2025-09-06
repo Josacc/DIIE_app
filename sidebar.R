@@ -1,4 +1,8 @@
 # shiny dashboardSidebar
+
+source('modules/evaluation/module_evaluation.R')
+
+
 sidebar <- dashboardSidebar(
   width = 160,
   HTML(str_c("<br><br><br><br><br><br><br>")),
