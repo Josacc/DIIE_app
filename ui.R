@@ -1,9 +1,9 @@
-
 source('header.R')
 source('sidebar.R')
 source('body.R')
 
 # secure_app(
+#
 #   theme    = shinytheme("flatly"),
 #   language = "es",
 #   id       = "auth",
@@ -23,6 +23,7 @@ source('body.R')
 #     )
 #   ),
 #   lan = use_language("es"),
+
 
   dashboardPage(header, sidebar, body, title = 'Censo Nacional de Gobierno', skin = 'purple')
 # )

@@ -32,11 +32,11 @@ plot_arrival_questionnaires_previous_year <- function(data, .week, .title = "", 
       ggtitle(.title) +
       theme_classic() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+        axis.text.x  = element_text(angle = 45, hjust = 1, size = 9),
         axis.title.x = element_blank(),
-        axis.text.y = element_text(size = 9),
+        axis.text.y  = element_text(size = 9),
         axis.title.y = element_blank(),
-        plot.title = element_text(size = 10)
+        plot.title   = element_text(size = 10)
       )
   })
 
@@ -84,11 +84,11 @@ plot_arrival_questionnaires_current_year <- function(data, .week, .title = "", y
       ggtitle(.title) +
       theme_classic() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+        axis.text.x  = element_text(angle = 45, hjust = 1, size = 9),
         axis.title.x = element_blank(),
-        axis.text.y = element_text(size = 9),
+        axis.text.y  = element_text(size = 9),
         axis.title.y = element_blank(),
-        plot.title = element_text(size = 10)
+        plot.title   = element_text(size = 10)
       )
   })
 

@@ -17,19 +17,20 @@ library(tools)
 library(patchwork)
 library(scales)
 
+
 # Settings for shinyapss.io and Shiny Server
 options(
   encoding               = "UTF-8",
   rsconnect.locale.cache = FALSE,
   rsconnect.locale       = "es_MX.utf8"
 )
+
 Sys.setlocale(locale = "es_MX.utf8")
 
 
 source("user_base/application_user_base.R")
 source("user_base/DIIE_user_base.R")
 source("data/data_2025_year.R")
-source("functions/data_and_update.R")
 source("functions/top_ten_questions.R")
 source("functions/entities_vs_observations.R")
 source("functions/db_q_aclaracion_oc.R")
@@ -42,4 +43,3 @@ set_labels(
   "Password:"           = "Contraseña:",
   "Login"               = "Ingresar"
 )
-

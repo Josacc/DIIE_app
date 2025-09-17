@@ -1,8 +1,9 @@
 # 'Evaluación' module ---------------------------------------------
 
 mod_evaluation <- env()
-function_file  <- list.files('modules/evaluation/functions/', pattern = '\\.R$', full.names = TRUE)
-map(function_file, ~sys.source(., envir = mod_evaluation))
+function_file_evaluation <- list.files('modules/evaluation/functions/', pattern = '\\.R$', full.names = TRUE)
+
+map(function_file_evaluation, ~sys.source(., envir = mod_evaluation))
 
 
 module_evaluation_UI <- function(id) {

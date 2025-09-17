@@ -1,12 +1,16 @@
 # 'CNGAE_current_year' module ---------------------------------------------
 
-source('modules/CNGAE_2024/module_info_analitica.R')
-source('modules/CNGAE_2024/module_top_ten.R')
-source('modules/CNGAE_2024/module_revision_oc.R')
-source('modules/CNGAE_2024/module_proceso_firma_sello1.R')
-source('modules/CNGAE_2024/module_interno.R')
-source('modules/CNGAE_2024/module_actualizacion.R')
+module_files_integration_2024 <- list.files(path = 'modules/integration/CNGAE_2024', pattern = 'module(.+)\\.R$', full.names = TRUE)
+invisible(map(module_files_integration_2024, source))
+
 source("data/data_2024_year.R")
+
+
+mod_integration <- env()
+function_file_integration <- list.files('modules/integration/functions/', pattern = '\\.R$', full.names = TRUE)
+
+map(function_file_integration, ~sys.source(., envir = mod_integration))
+
 
 CNGAE_2024_UI <- function(id) {
 
@@ -66,21 +70,30 @@ CNGAE_2024_UI <- function(id) {
 CNGAE_2024_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
+
+    data_and_update <- mod_integration$data_and_update
+
+
     data <- reactive({
-      data_path <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
-      raw_data  <- data_and_update(data_path, year = 2024)
-      database     <- raw_data[[1]]
-      update       <- raw_data[[2]]
-      database_obs <- team_data(reviewer_team, database) %>%
-        filter(`Cantidad de obs` > 0)
+
+      data_path    <- 'historial_seguimiento/xIktan_20241119120144449_reporteSegumiento.xlsx'
+      raw_data     <- data_and_update(data_path, year = 2024)
+      database     <- raw_data$data_base
+      update       <- raw_data$update
+      database_obs <- team_data(reviewer_team, database) %>% filter(`Cantidad de obs` > 0)
 
       return(list(database, database_obs, update))
+
     })
 
     info_analitica_Server_2024('id_info_analitica')
+
     top_ten_Server_2024('id_top_ten', data)
+
     revision_oc_Server_2024('id_revision_oc', data)
+
     proceso_firma_sello1_Server_2024('id_proceso_firma_sello1', data)
+
     interno_Server_2024('id_module_interno', data)
 
   })

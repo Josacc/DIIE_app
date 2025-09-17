@@ -122,8 +122,12 @@ revision_oc_UI_2024 <- function(id) {
 revision_oc_Server_2024 <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
+
+    data_and_update <- mod_integration$data_and_update
+
+
     # Data base previous year
-    database_previous_year <- data_and_update("historial_seguimiento/xIktan_20231005104808909_reporteSegumiento.xlsx")[[1]]
+    database_previous_year <- data_and_update("historial_seguimiento/xIktan_20231005104808909_reporteSegumiento.xlsx")$data_base
 
     # Folios "No aplica" previous year
     vec_folios_no_aplica_previous_year <- DT_folio_no_aplica(database_previous_year) %>%

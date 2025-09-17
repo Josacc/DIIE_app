@@ -1,7 +1,7 @@
 # shiny dashboardBody
 
-source('modules/CNGAE_2024.R')
-source('modules/CNGAE_2025.R')
+source('modules/integration/CNGAE_2024/CNGAE_2024.R')
+source('modules/integration/CNGAE_2025/CNGAE_2025.R')
 source('modules/evaluation/CNGAE_operative_citas_2023.R')
 source('modules/evaluation/CNGAE_operative_recupera_2023.R')
 source('modules/evaluation/CNGAE_operative_revision_2023.R')

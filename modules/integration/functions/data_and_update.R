@@ -1,4 +1,5 @@
 # Reading and first sorting of data
+
 data_and_update <- function(.file, year = 2025) {
 
   DIIE_dates <- str_c('DIIE_dates_', year) %>% get(envir = .GlobalEnv)
@@ -28,5 +29,5 @@ data_and_update <- function(.file, year = 2025) {
                                      "8" = "CNTAIPPDPE" ))) %>%
     mutate(Censo = factor(Censo, levels = levels(pull(DIIE_dates, name))))
 
-  return(list(.data, .update))
+  return(list(data_base = .data, update = .update))
 }
