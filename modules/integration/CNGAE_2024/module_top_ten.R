@@ -12,6 +12,7 @@ tm_tabPanels <- function(id, censo_name) {
   )
 }
 
+
 top_ten_UI_2024 <- function(id) {
   tabPanel(
     "Top 10",
@@ -58,8 +59,13 @@ top_ten_UI_2024 <- function(id) {
   )
 }
 
+
 top_ten_Server_2024 <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
+
+    top_ten_questions <- mod_integration$top_ten_questions
+
 
     observeEvent(input$id_top_ten_question, {
       updateTabsetPanel(session, "id_modulo_select", selected = input$id_top_ten_question)
@@ -115,11 +121,14 @@ top_ten_Server_2024 <- function(id, data) {
     })
 
     output$plot_top_ten_questions <- renderPlotly({
+
       validate(need(reactive_top_ten_questions()[[1]], "Sin observaciones"))
       reactive_top_ten_questions()[[1]]
+
     })
 
     output$table_top_ten_questions <- renderDataTable({
+
       validate(need(reactive_top_ten_questions()[[1]], ""))
       datatable(
         reactive_top_ten_questions()[[2]],
@@ -132,6 +141,9 @@ top_ten_Server_2024 <- function(id, data) {
           )
         )
       )
+
     })
+
   })
+
 }

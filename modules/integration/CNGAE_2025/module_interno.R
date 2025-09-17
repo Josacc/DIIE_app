@@ -29,6 +29,14 @@ interno_UI <- function(id) {
 interno_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
 
+
+    plot_entities_vs_obs             <- mod_integration$plot_entities_vs_obs
+    plot_entities_vs_obs_grid        <- mod_integration$plot_entities_vs_obs_grid
+    db_q_aclaracion_oc_filter        <- mod_integration$db_q_aclaracion_oc_filter
+    db_q_aclaracion_oc               <- mod_integration$db_q_aclaracion_oc
+    datatable_q_aclaracion_oc_filter <- mod_integration$datatable_q_aclaracion_oc_filter
+
+
     ns <- session$ns
 
     credentials <- loginServer(

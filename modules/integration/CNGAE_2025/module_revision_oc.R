@@ -1,7 +1,9 @@
 # 'revisión oc' module ----------------------------------------------------
 
 revision_oc_UI <- function(id) {
+
   ns <- NS(id)
+
   tagList(
     br(),
     tabsetPanel(
@@ -110,8 +112,17 @@ revision_oc_UI <- function(id) {
   )
 }
 
+
 revision_oc_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
+
+    plot_arrival_questionnaires_previous_year    <- mod_integration$plot_arrival_questionnaires_previous_year
+    plot_arrival_questionnaires_current_year     <- mod_integration$plot_arrival_questionnaires_current_year
+    plot_arrival_questionnaires_grid_census_2023 <- mod_integration$plot_arrival_questionnaires_grid_census_2023
+    max_questionnaries_day_entities_2023         <- mod_integration$max_questionnaries_day_entities_2023
+    plot_arrival_questionnaires_entities_2023    <- mod_integration$plot_arrival_questionnaires_entities_2023
+
 
     database_questionnaires <- reactive({
       vector_folios_no_aplica <- DT_folio_no_aplica(data()[[1]]) %>%

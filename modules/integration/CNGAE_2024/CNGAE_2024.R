@@ -3,7 +3,8 @@
 module_files_integration_2024 <- list.files(path = 'modules/integration/CNGAE_2024', pattern = 'module(.+)\\.R$', full.names = TRUE)
 invisible(map(module_files_integration_2024, source))
 
-source("data/data_2024_year.R")
+source('modules/integration/functions/others_functions.R')
+source('data/data_2024_year.R')
 
 
 mod_integration <- env()
@@ -67,11 +68,13 @@ CNGAE_2024_UI <- function(id) {
   )
 }
 
+
 CNGAE_2024_Server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
 
     data_and_update <- mod_integration$data_and_update
+    team_data       <- mod_integration$team_data
 
 
     data <- reactive({

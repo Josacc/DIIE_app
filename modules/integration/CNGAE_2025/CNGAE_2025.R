@@ -3,6 +3,7 @@
 module_files_integration_2025 <- list.files(path = 'modules/integration/CNGAE_2025', pattern = 'module(.+)\\.R$', full.names = TRUE)
 invisible(map(module_files_integration_2025, source))
 
+source('modules/integration/functions/others_functions.R')
 source("data/data_2025_year.R")
 
 
@@ -67,9 +68,8 @@ CNGAE_2025_Server <- function(id) {
 
 
     data_and_update <- mod_integration$data_and_update
+    team_data       <- mod_integration$team_data
 
-
-    info_analitica_Server('id_info_analitica')
 
     data <- reactive({
 
@@ -82,6 +82,8 @@ CNGAE_2025_Server <- function(id) {
       return(list(database, database_obs, update))
 
     })
+
+    info_analitica_Server('id_info_analitica')
 
     top_ten_Server('id_top_ten', data)
 

@@ -31,10 +31,7 @@ Sys.setlocale(locale = "es_MX.utf8")
 source("user_base/application_user_base.R")
 source("user_base/DIIE_user_base.R")
 source("data/data_2025_year.R")
-source("functions/top_ten_questions.R")
-source("functions/entities_vs_observations.R")
-source("functions/db_q_aclaracion_oc.R")
-source("functions/others_functions.R")
+
 
 set_labels(
   language              = "es",

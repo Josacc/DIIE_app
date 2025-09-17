@@ -1,5 +1,3 @@
-source("functions/datatable_something.R")
-
 function(input, output, session) {
 
   res_auth <- secure_server(
@@ -8,13 +6,14 @@ function(input, output, session) {
   )
 
   auth <- callModule(
-    module = auth_server,
-    id     = "auth",
+    module            = auth_server,
+    id                = "auth",
     check_credentials = check_credentials(application_user_base)
   )
 
 
   fullscreen_mode <- reactiveVal(FALSE)
+
 
   observeEvent(input$page_toggle, {
     if (!fullscreen_mode()) {

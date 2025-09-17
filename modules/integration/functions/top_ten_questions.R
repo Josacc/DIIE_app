@@ -1,4 +1,5 @@
 # Plot function top ten questions by project and module
+
 top_ten_questions <- function(data, project, module) {
 
   filter_observations <- function(x) {

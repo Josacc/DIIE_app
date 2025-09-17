@@ -19,6 +19,11 @@ actualizacion_UI <- function(id) {
 actualizacion_Server <- function(id, data) {
   # stopifnot(is.reactive(data()))  # check this line!!
   moduleServer(id, function(input, output, session) {
+
+
+    datatable_actualizacion <- mod_integration$datatable_actualizacion
+
+
     output$update <- renderText({
       str_c("Actualización ", (data())[[3]])
     })
@@ -26,5 +31,7 @@ actualizacion_Server <- function(id, data) {
     output$database_original <- renderDT({
       datatable_actualizacion((data())[[1]])
     })
+
   })
+
 }

@@ -119,8 +119,16 @@ revision_oc_UI_2024 <- function(id) {
   )
 }
 
+
 revision_oc_Server_2024 <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
+
+    plot_arrival_questionnaires_previous_year    <- mod_integration$plot_arrival_questionnaires_previous_year
+    plot_arrival_questionnaires_current_year     <- mod_integration$plot_arrival_questionnaires_current_year
+    plot_arrival_questionnaires_grid_census_2023 <- mod_integration$plot_arrival_questionnaires_grid_census_2023
+    max_questionnaries_day_entities_2023         <- mod_integration$max_questionnaries_day_entities_2023
+    plot_arrival_questionnaires_entities_2023    <- mod_integration$plot_arrival_questionnaires_entities_2023
 
 
     data_and_update <- mod_integration$data_and_update

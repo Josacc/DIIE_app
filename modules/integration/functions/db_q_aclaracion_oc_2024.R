@@ -1,7 +1,6 @@
-# "Aclaración de información OC" questionnaires database function
-db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
+#
 
-  id_folio_extended <- str_c('id_folio_extended_', year) %>% get(envir = .GlobalEnv)
+db_q_aclaracion_oc_2024 <- function(database, delete_q = NULL) {
 
   .data <- database %>%
     filter(!(Folio %in% pull(DT_folio_no_aplica(database)))) %>%
@@ -23,7 +22,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
     bind_rows(DT_folio_no_aplica(database) %>% mutate(Revisiones = "NA")) %>%
     arrange(Folio)
 
-  .table <- id_folio_extended %>%
+  .table <- id_folio_extended_2024 %>%
     select(Folio, id_estado) %>%
     rename(Estado = "id_estado") %>%
     mutate(Cuestionario = str_sub(Folio, 3)) %>%
@@ -56,7 +55,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
           list(
             extend           = "colvis",
             text             = "Visibilidad de columnas",
-            columns          = 1:42,
+            columns          = 1:40,
             collectionLayout = "fixed columns",
             popoverTitle     = "Control de visibilidad de columnas"
           )
@@ -71,7 +70,7 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
           )
         ),
         columnDefs    = list(
-          list(className = 'dt-center', targets = c(1:43))
+          list(className = 'dt-center', targets = c(1:40))
         ),
         initComplete  = JS(
           "function(settings, json) {",
@@ -85,12 +84,12 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:44),
+      columns         = c(2:41),
       fontWeight      = styleInterval(c(2), c("", "bold")),
       fontSize        = '90%'
     ) %>%
     formatStyle(
-      columns         = c(2:44),
+      columns         = c(2:41),
       backgroundColor = styleInterval(c(2, 3, 4), c("", "bisque", "yellow", "red"))
     ) %>%
     formatStyle(
@@ -100,24 +99,4 @@ db_q_aclaracion_oc <- function(database, delete_q = NULL, year = 2025) {
 
   return(list(datatable = .datatable, data = .data, table = .table))
 
-}
-
-db_q_aclaracion_oc_filter <- function(database_1, database_2, input_matrix) {
-
-  if (length(input_matrix) == 0) {
-    return(database_1)
-  }
-
-  aux_function <- function(database, x) {
-    .matrix <- database %>%
-      as.matrix()
-    folio <- str_c(
-      .matrix[x[1], 1], colnames(.matrix)[x[2] + 1]
-    )
-    return(folio)
-  }
-
-  folios <- apply(input_matrix, 1, aux_function, database = database_2)
-
-  return(database_1 %>% filter(Folio %in% folios))
 }

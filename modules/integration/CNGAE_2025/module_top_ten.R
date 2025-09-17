@@ -12,6 +12,7 @@ tm_tabPanels <- function(id, censo_name) {
   )
 }
 
+
 top_ten_UI <- function(id) {
   ns <- NS(id)
   tagList(
@@ -59,8 +60,12 @@ top_ten_UI <- function(id) {
   )
 }
 
+
 top_ten_Server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
+    top_ten_questions <- mod_integration$top_ten_questions
+
 
     observeEvent(input$id_top_ten_question, {
       updateTabsetPanel(session, "id_modulo_select", selected = input$id_top_ten_question)
